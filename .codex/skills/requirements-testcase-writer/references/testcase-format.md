@@ -5,7 +5,7 @@ Use this format unless the user explicitly asks for another testcase schema.
 ## File naming rule
 
 - Write the testcase file directly under `testcases/`.
-- Name the file as `<项目名称>测试用例.md`.
+- Name the testcase file as `<项目名称>测试用例.md`.
 - Keep the document title as `# <项目名称>测试用例`.
 
 ## Recommended file structure
@@ -13,30 +13,32 @@ Use this format unless the user explicitly asks for another testcase schema.
 ```md
 # <项目名称>测试用例
 
-## 1. 需求来源
 - 来源路径：`requirments/...`
-- 关联页面：页面A、页面B
-- 生成说明：首次生成 / 增量补充 / 按变更更新
+- 来源路径：`requirments/...`
+- 关联范围：模块A、模块B、模块C
 
-## 2. 测试范围
-- 本次覆盖：
-- 本次不覆盖：
+## +一级模块A
 
-## 3. 待确认
+### +二级模块A
+
+#### +三级模块A
+
+##### 用例标题A
+
+测试步骤
+1. 进入页面A
+2. 点击按钮B
+3. 查看页面变化
+
+预期结果
+1. 显示模块C
+2. 按钮文案正确
+3. 页面跳转到D
+
+## 待确认
+
 - 待确认问题 1
 - 待确认问题 2
-
-## 4. 测试用例
-
-| 用例ID | 模块 | 测试场景 | 测试步骤 | 预期结果 | 优先级 |
-| --- | --- | --- | --- | --- | --- |
-| PK-001 | 产品详情入口（可展示线路PK） | 正常进入 PK 流程 | 1. 进入产品详情页 2. 点击“线路PK” 3. 选择活动 4. 确认进入对比 | 成功进入 PK 页面，所选活动正确展示 | P1 |
-
-## 5. 覆盖说明
-- 主流程：
-- 异常流程：
-- 边界场景：
-- 埋点检查：
 ```
 
 ## Coverage checklist
@@ -54,10 +56,21 @@ Before finishing, check whether the testcase set covers:
 
 ## Writing rules
 
-- One row should represent one independently verifiable scenario.
-- Do not use a standalone `前置条件` column by default; merge preconditions into the ordered test steps.
-- Keep `模块` names specific. If many cases share one generic module, add a concise qualifier such as condition, state, or sub-function; for list-page cases, you may use the testcase name as the module name.
-- Keep steps short and ordered.
+- Default to XMind-friendly hierarchical Markdown, not a table, when the user wants XMind format.
+- When the user explicitly asks for a real `.xmind` file and a local sample exists, prefer outputting a sibling `.xmind` file under `testcases/`.
+- The screenshot-based XMind style in [xmind-screenshot-style.md](xmind-screenshot-style.md) is the primary reference for this repo.
+- Group related scenarios under `+`-prefixed module headings when the output is intended for XMind.
+- Prefer a hierarchy like `一级模块 -> 二级模块 -> 三级模块 -> 用例标题`.
+- If the user has provided or finalized a company testcase sample in the repo, follow that sample first and treat this reference as the fallback baseline.
+- If the user has provided an XMind screenshot sample, align the generated branch granularity and wording style with that screenshot first.
+- For real `.xmind` output, prefer the visual node chain `根节点 -> 模块节点 -> 用例节点 -> 步骤内容节点 -> 预期结果节点`.
+- For real `.xmind` output in this repo, prefer the screenshot-based canvas settings: `逻辑图` canvas, `晨曦` color scheme, `彩虹分支` enabled, `同级主题对齐` enabled.
+- Each testcase should contain `测试步骤` and `预期结果`.
+- Do not use a standalone `前置条件` section by default; merge preconditions into the ordered test steps.
+- Keep module and testcase names specific and readable.
+- Avoid generic repeated module names like `列表模块`、`基础模块`; prefer concrete page/function names, or directly use the testcase title when that is clearer.
+- Keep steps short and ordered where possible, but preserve multi-level numbering when the business rule itself is hierarchical.
+- Normalize numbered lines as `1. 文案`.
+- If a screenshot sample has already split one requirement into siblings such as `首次进入`、`刷新页面`、`已发起过`, keep that split instead of recombining it.
 - Expected results should describe observable behavior, not implementation guesses.
-- If one scenario has multiple branches, split it into separate rows.
-- Use stable IDs with a readable prefix derived from the feature name.
+- When several branches belong to one rule set and are easier to read together, keep them in the same testcase instead of forcing a split.
