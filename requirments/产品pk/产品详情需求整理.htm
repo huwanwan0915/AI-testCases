@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<!-- saved from url=(0108)file:///Users/maitao/AI-testCases/requirments/%E4%BA%A7%E5%93%81pk/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>产品详情需求整理</title>
+    <style>
+      :root {
+        --bg: #f6efe7;
+        --bg-accent: #fff7f1;
+        --paper: #fffdf9;
+        --ink: #2c241f;
+        --muted: #786b62;
+        --line: #ead8c7;
+        --accent: #ff6a3c;
+        --accent-strong: #ff4f1f;
+        --accent-soft: #fff0e8;
+        --pink: #ff4e96;
+        --pink-soft: #fff1f7;
+        --green: #2ea66b;
+        --green-soft: #eefaf3;
+        --shadow: 0 20px 50px rgba(107, 63, 24, 0.12);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top right, rgba(255, 122, 54, 0.16), transparent 28%),
+          radial-gradient(circle at left center, rgba(255, 78, 150, 0.12), transparent 22%),
+          linear-gradient(180deg, #fbf6f1 0%, #f6efe7 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page-shell {
+        width: min(1480px, calc(100vw - 40px));
+        margin: 24px auto 40px;
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 24px;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 24px;
+        align-self: start;
+        background: rgba(255, 253, 249, 0.86);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(234, 216, 199, 0.8);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 22px 18px;
+      }
+
+      .sidebar h2 {
+        margin: 0 0 6px;
+        font-size: 22px;
+      }
+
+      .sidebar p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 13px;
+      }
+
+      .nav-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-list a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: transparent;
+        font-size: 14px;
+        color: var(--muted);
+        transition: 0.2s ease;
+      }
+
+      .nav-list a:hover {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+      }
+
+      .content {
+        display: grid;
+        gap: 24px;
+      }
+
+      .hero {
+        overflow: hidden;
+        position: relative;
+        background:
+          linear-gradient(135deg, rgba(255, 106, 60, 0.96), rgba(255, 135, 52, 0.94)),
+          linear-gradient(180deg, #fff, #fff);
+        border-radius: 34px;
+        padding: 34px;
+        color: #fff8f3;
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -80px -120px auto;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .hero h1 {
+        position: relative;
+        margin: 0 0 14px;
+        font-size: clamp(32px, 4vw, 46px);
+        line-height: 1.08;
+      }
+
+      .hero p {
+        position: relative;
+        margin: 0;
+        max-width: 820px;
+        line-height: 1.8;
+        color: rgba(255, 249, 243, 0.9);
+        font-size: 15px;
+      }
+
+      .hero-meta {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 13px;
+      }
+
+      .notice {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        padding: 20px 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .notice strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .notice p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .req-section {
+        background: rgba(255, 253, 249, 0.88);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(234, 216, 199, 0.82);
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .section-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .section-head h2 {
+        margin: 0 0 10px;
+        font-size: clamp(24px, 3vw, 32px);
+      }
+
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+        max-width: 760px;
+      }
+
+      .section-grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.92fr) minmax(360px, 1.08fr);
+        gap: 24px;
+      }
+
+      .visual-card,
+      .detail-card {
+        border-radius: 24px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        padding: 22px;
+      }
+
+      .visual-card {
+        background:
+          linear-gradient(180deg, rgba(255, 247, 241, 0.86), rgba(255, 255, 255, 1)),
+          var(--paper);
+      }
+
+      .visual-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .visual-title strong {
+        font-size: 16px;
+      }
+
+      .visual-title span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .origin-shot {
+        margin: 0;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid #efdaca;
+        background: #fff;
+        box-shadow: 0 12px 24px rgba(126, 72, 33, 0.08);
+      }
+
+      .origin-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .origin-caption {
+        padding: 12px 14px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+        background: #fffaf5;
+      }
+
+      .origin-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .entry-origin-grid {
+        align-items: start;
+      }
+
+      .origin-tile {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #efdaca;
+        background: #fff;
+      }
+
+      .origin-tile img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .origin-tile p {
+        margin: 0;
+        padding: 10px 12px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+        background: #fffaf5;
+      }
+
+      .phone-frame {
+        width: min(100%, 360px);
+        margin: 0 auto;
+        padding: 14px;
+        border-radius: 34px;
+        background: linear-gradient(180deg, #1b1a1f 0%, #37343b 100%);
+        box-shadow: 0 18px 38px rgba(24, 18, 12, 0.22);
+      }
+
+      .phone-screen {
+        position: relative;
+        min-height: 660px;
+        overflow: hidden;
+        border-radius: 26px;
+        background:
+          linear-gradient(180deg, #fff 0%, #fef7f3 100%);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+      }
+
+      .phone-notch {
+        width: 120px;
+        height: 24px;
+        margin: 10px auto 0;
+        border-radius: 999px;
+        background: rgba(31, 27, 25, 0.92);
+      }
+
+      .mock-header {
+        position: relative;
+        padding: 18px 18px 0;
+      }
+
+      .mock-cover {
+        height: 190px;
+        border-radius: 18px;
+        background:
+          linear-gradient(135deg, rgba(28, 55, 77, 0.78), rgba(255, 168, 79, 0.55)),
+          linear-gradient(180deg, #8cc3ff, #ffebbe);
+      }
+
+      .mock-badge {
+        position: absolute;
+        right: 34px;
+        top: 30px;
+        padding: 7px 10px;
+        border-radius: 10px;
+        background: rgba(73, 179, 101, 0.92);
+        color: #fff;
+        font-size: 12px;
+      }
+
+      .mock-price {
+        margin-top: 12px;
+        padding: 16px;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #ff6234, #ff8b38);
+      }
+
+      .mock-price strong {
+        font-size: 28px;
+      }
+
+      .mock-caption {
+        padding: 14px 18px 0;
+      }
+
+      .mock-caption h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      .mock-caption p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 13px;
+      }
+
+      .mock-chip-row,
+      .mock-tab-row,
+      .mock-footer-actions,
+      .mock-tag-grid,
+      .mock-button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .mock-chip,
+      .mock-tag,
+      .mock-button,
+      .mock-tab,
+      .mock-mini-btn {
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+
+      .mock-chip,
+      .mock-tag {
+        background: #fff3ea;
+        color: #ff6f3e;
+      }
+
+      .mock-floating-pk {
+        position: absolute;
+        right: 18px;
+        top: 340px;
+        width: 84px;
+        height: 64px;
+        border-radius: 10px 10px 0 0;
+        background: rgba(35, 34, 39, 0.95);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .mock-list {
+        padding: 16px 18px 92px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .mock-card {
+        background: #fff;
+        border: 1px solid #f1dfd0;
+        border-radius: 18px;
+        padding: 14px;
+        box-shadow: 0 8px 20px rgba(126, 72, 33, 0.06);
+      }
+
+      .mock-card-top {
+        display: grid;
+        grid-template-columns: 74px 1fr;
+        gap: 12px;
+      }
+
+      .mock-thumb {
+        height: 74px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #d2e9ff, #ffd1c4);
+      }
+
+      .mock-card h4 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .mock-card p,
+      .mock-table li,
+      .mock-summary li {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 12px;
+      }
+
+      .mock-tab {
+        background: #f6ebe2;
+        color: #8a7363;
+      }
+
+      .mock-tab.active,
+      .mock-button.primary,
+      .mock-mini-btn.primary {
+        background: linear-gradient(135deg, #ff6a3c, #ff8d3a);
+        color: #fff;
+      }
+
+      .mock-button,
+      .mock-mini-btn {
+        background: #f6ebe2;
+        color: #6a5d54;
+      }
+
+      .mock-bottom-bar {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid #f0dcca;
+        box-shadow: 0 12px 24px rgba(126, 72, 33, 0.12);
+      }
+
+      .mock-modal {
+        position: relative;
+        min-height: 620px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, #fff7f2 0%, #fff 100%);
+        padding: 18px;
+        overflow: hidden;
+      }
+
+      .mock-modal-shell {
+        position: absolute;
+        inset: 86px 18px 18px;
+        border-radius: 24px 24px 18px 18px;
+        background: #fff;
+        border: 1px solid #edd9ca;
+        box-shadow: 0 16px 36px rgba(126, 72, 33, 0.12);
+        padding: 18px;
+      }
+
+      .mock-empty {
+        border: 1px dashed #ffb692;
+        border-radius: 18px;
+        padding: 24px 16px;
+        text-align: center;
+        background: #fff8f3;
+      }
+
+      .mock-empty strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .mock-progress {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .progress-row {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .progress-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        background: #ffb28f;
+      }
+
+      .progress-num.active {
+        background: var(--accent-strong);
+      }
+
+      .progress-num.done {
+        background: var(--green);
+      }
+
+      .mock-result-grid {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .mock-result-card,
+      .mock-table {
+        border-radius: 18px;
+        border: 1px solid #efd8c8;
+        background: #fff;
+        padding: 14px;
+      }
+
+      .mock-result-card strong,
+      .mock-table strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .mock-table ul,
+      .mock-summary {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .mock-filter-grid {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .mock-filter-item {
+        border-radius: 14px;
+        padding: 12px;
+        border: 1px solid #efdaca;
+        background: #fff9f4;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .hotspot {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--pink), #ff7a7a);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 10px 22px rgba(255, 78, 150, 0.28);
+      }
+
+      .mapping-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .mapping-item {
+        border: 1px solid #efdaca;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #fffaf5, #fff);
+        padding: 16px;
+      }
+
+      .mapping-item-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .mapping-num {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, var(--pink), #ff7a7a);
+      }
+
+      .mapping-item strong {
+        font-size: 15px;
+      }
+
+      .mapping-item p,
+      .mapping-item ul,
+      details p,
+      details li {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .mapping-item ul {
+        padding-left: 18px;
+      }
+
+      details {
+        margin-top: 14px;
+        border-top: 1px dashed #ead7c8;
+        padding-top: 14px;
+      }
+
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .summary-box {
+        background: var(--bg-accent);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+      }
+
+      .summary-box ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .mapping-guide {
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: #fff6ef;
+        border: 1px solid #f3ddcc;
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 13px;
+      }
+
+      .mapping-guide strong {
+        color: var(--ink);
+      }
+
+      .footer {
+        background: #231f1d;
+        color: rgba(255, 248, 241, 0.88);
+        border-radius: 28px;
+        padding: 24px 28px;
+      }
+
+      .footer p {
+        margin: 0;
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      @media (max-width: 1160px) {
+        .page-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .section-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        .req-section,
+        .notice,
+        .footer {
+          padding: 22px;
+        }
+      }
+
+      @media (max-width: 540px) {
+        .page-shell {
+          width: min(100vw - 20px, 1480px);
+          margin: 10px auto 28px;
+          gap: 14px;
+        }
+
+        .sidebar,
+        .hero,
+        .notice,
+        .req-section,
+        .footer {
+          border-radius: 22px;
+        }
+
+        .phone-frame {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <h2>产品详情需求整理</h2>
+        <p>按页面区域重新编排，统一为“图示功能点 + 对应描述 + 原始摘录”的结构，阅读顺序与页面操作顺序保持一致。</p>
+        <nav>
+          <ul class="nav-list">
+            <li><a href="file:///Users/maitao/AI-testCases/requirments/%E4%BA%A7%E5%93%81pk/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85.html#overview">整理说明</a></li>
+            <li><a href="#entry">01 线路PK入口</a></li>
+            <li><a href="#selector">02 活动选择弹窗</a></li>
+            <li><a href="#empty">03 列表空态</a></li>
+            <li><a href="#result">04 PK结果页</a></li>
+            <li><a href="#default-detail">05 PK详情-默认</a></li>
+            <li><a href="#diff-detail">06 看不同与筛选维度</a></li>
+            <li><a href="#actions">07 底部功能与反馈</a></li>
+            <li><a href="#share">08 分享结果页</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section class="hero">
+          <h1>产品详情页需求文档<br>结构化重整版</h1>
+          <p>
+            本页不再沿用 Axure 导出的散点式标注，而是把同一页面里的截图位、功能点、规则说明合并成完整模块。
+            每个模块都按“页面元素 -&gt; 功能编号 -&gt; 描述规则 -&gt; 原始摘录”的方式表达，方便产品、研发、测试共同阅读。
+          </p>
+          <div class="hero-meta">
+            <span class="pill">整理原则：按页面从上到下</span>
+            <span class="pill">表达方式：图片功能与描述一一对应</span>
+            <span class="pill">适用范围：产品详情页线路PK能力</span>
+          </div>
+        </section>
+
+        <section class="notice" id="overview">
+          <strong>整理说明</strong>
+          <p>
+            当前页面已经切换为“原始截图 + 对应功能描述”的整理方式。左侧使用原 Axure 导出页面直接裁出的真实截图，右侧按页面视觉顺序拆解功能点，
+            下方保留原始需求摘录，方便产品、研发、测试三方直接对照同一份页面理解需求。
+          </p>
+        </section>
+
+        <section class="req-section" id="entry">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">01 页面入口</div>
+              <h2>线路PK入口</h2>
+              <p>聚焦产品详情页首屏区域，明确分享入口位置调整、线路PK入口展示条件，以及按钮动效与滚动交互规则。</p>
+            </div>
+            <div class="summary-box">
+              <ul class="mock-summary">
+                <li>对应原稿标题：线路PK入口-1</li>
+                <li>页面位置：头图、悬浮入口、活动信息区</li>
+                <li>重点：位置、展示条件、动效逻辑</li>
+              </ul>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>拆成“头图入口”和“线路PK入口”两张原稿区域</span>
+              </div>
+              <div class="origin-grid entry-origin-grid">
+                <div class="origin-tile">
+                  <img src="./image/entry-share.png" alt="活动详情页分享入口原稿图" />
+                  <p>原稿图 1：活动详情页头图右上分享入口 / 打开小程序入口。</p>
+                </div>
+                <div class="origin-tile">
+                  <img src="./image/entry-pk.png" alt="线路PK入口原稿图" />
+                  <p>原稿图 2：页面中部线路PK入口，覆盖入口展示和动效收起场景。</p>
+                </div>
+              </div>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>1 为头图右上分享 / 打开小程序入口；2 为页面中部线路PK入口；3 为入口动效与页面下滑后的收起规则。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>分享入口与打开小程序入口统一上移到头图位置</strong>
+                  </div>
+                  <p>H5 端分享悬浮按钮、小程序端打开小程序悬浮按钮，都调整到头图区域展示，避免与页面中部功能入口混放。</p>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>线路PK入口展示条件</strong>
+                  </div>
+                  <ul>
+                    <li>仅产品品类为亲子游或营地教育-多日营时展示。</li>
+                    <li>产品必须为非隐藏且可售。</li>
+                    <li>若分享链接中包含隐藏套餐，则按隐藏处理，不展示线路PK入口。</li>
+                    <li>点击入口后进入线路PK流程页。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>按钮动效与滚动交互规则</strong>
+                  </div>
+                  <ul>
+                    <li>当日未发起过对比：页面刷新时动效执行一次，次日重新按相同逻辑执行。</li>
+                    <li>当页面下滑时，入口收起且中断动效；页面静止后不再补播动效。</li>
+                    <li>当日已发起过对比：不再执行动效，仅保留收起/出现的页面状态变化。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>1、H5/小程序端分享悬浮按钮/打开小程序悬浮按钮位置调整到头图位置。</p>
+                <p>2、如果产品品类为亲子游、营地教育-多日营且非隐藏可售，详情页增加“线路PK”悬浮按钮，点击进入线路PK页面。</p>
+                <p>3、按钮动效及交互说明：当日没有发起过对比，页面刷新动效执行一次；页面下滑收起且中断动效。已发起过对比则不再执行动效。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="selector">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">02 弹窗流程</div>
+              <h2>活动选择弹窗</h2>
+              <p>把活动选择页拆成可直接评审的模块：顶部结构、Tab 顺序、品类标签、产品卡片、选择校验和底部对比栏。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿页面构成</strong>
+                <span>直接截取原始 Axure 文档对应区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/selector.png" alt="活动选择弹窗原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档里“线路PK-活动选择弹窗”对应的页面区域，保留弹窗标题、Tab、品类标签、列表与底部对比栏的原稿结构。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>从上到下依次对应弹窗标题与关闭区、足迹/收藏 Tab、品类标签、产品卡片内容、底部对比栏。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>进入 PK 后默认先弹出选择活动页</strong>
+                  </div>
+                  <p>从产品详情进入线路PK后，不先展示结果页，先进入活动选择弹窗，用户必须完成活动选择后才能继续。</p>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>Tab 顺序随入口变化</strong>
+                  </div>
+                  <ul>
+                    <li>固定只有两个 Tab：我的足迹、我的收藏。</li>
+                    <li>从产品详情进入：默认按“我的足迹 -&gt; 我的收藏”展示。</li>
+                    <li>从我的收藏或我的足迹入口进入：进入来源对应的 Tab 置于首位。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>分类标签与默认品类排序</strong>
+                  </div>
+                  <ul>
+                    <li>分类标签固定为：国内游、境外游、周边游、多日营。</li>
+                    <li>当前浏览产品所属品类置顶展示，其余顺序按原设计排列。</li>
+                    <li>品类与二级品类映射需要保持：国内长途游、境外游、国内短途游、营地教育多日营。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">4</span>
+                    <strong>产品卡片与默认选中逻辑</strong>
+                  </div>
+                  <ul>
+                    <li>列表仅展示当前分类下的可见可售产品。</li>
+                    <li>足迹最多展示最近 3 个月浏览记录，收藏展示全部。</li>
+                    <li>若从产品详情进入，当前产品需要打“当前浏览”标记。</li>
+                    <li>卡片展示头图、评分/销量、标题、线路信息、套餐信息、选择交互区。</li>
+                    <li>默认带入产品详情页已选线路；若该线路存在多个可见套餐，则默认选第一个。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">5</span>
+                    <strong>选择校验与底部对比栏</strong>
+                  </div>
+                  <ul>
+                    <li>只支持两两对比，选择第三个活动时提示“最多只能选择两个活动”。</li>
+                    <li>只支持同类活动对比，跨品类时提示“不支持跨品类对比活动”。</li>
+                    <li>底部栏展示已选活动缩略信息、移除按钮和对比按钮。</li>
+                    <li>已选套餐不足两个时，点击对比提示“请选择两个活动对比”。</li>
+                    <li>关闭按钮关闭当前弹窗并返回上一页。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>进入 PK 页后，先弹窗选择活动；区分我的足迹 / 我的收藏两个 Tab；按品类展示分类标签，并将当前浏览品类置顶。</p>
+                <p>列表展示可见可售产品，支持默认线路/套餐带入；产品卡片需要展示头图、评分、标题、线路、套餐和选择状态。</p>
+                <p>只支持两个活动、只支持同类活动对比；底部展示选中产品与对比按钮。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="empty">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">03 空态处理</div>
+              <h2>产品列表空态</h2>
+              <p>明确分类下无产品时的空态反馈方式，以及“去挑选”按钮的跳转目标，避免空白页面没有下一步动作。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿页面构成</strong>
+                <span>直接截取原始 Axure 文档对应区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/empty.png" alt="产品列表空态原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档里“线路PK页面-产品列表空态”对应的页面区域，包含空态插图占位、空态文案与“去挑选”按钮位置。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>先看空态提示，再看底部跳转按钮，按钮点击后按当前品类跳转到对应频道页。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>对应分类下无产品时展示空态</strong>
+                  </div>
+                  <p>当用户切换到某个品类标签后，如果该分类下没有可见可售产品，则页面展示统一空态，不展示空白列表。</p>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>“去挑选”跳转到对应品类频道页</strong>
+                  </div>
+                  <ul>
+                    <li>国内游：`categoryLanding?templateid=19`</li>
+                    <li>境外游：`categoryLanding?templateid=20`</li>
+                    <li>周边游：`category?templateid=9`</li>
+                    <li>多日营：`categoryLanding?templateid=10`</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>如果对应分类下无产品，给空态；点击去挑选按钮，跳转到对应金刚区品类页。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="result">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">04 结果页</div>
+              <h2>PK结果页</h2>
+              <p>把“思考过程”和“结果输出”拆开表达，说明四步进度、流式输出时机、按钮显示时机和页面底部交互状态。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>直接截取原始 Axure 文档里“线路PK结果”区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/result.png" alt="PK结果页原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档中“线路PK结果”对应区域，保留思考过程、结果输出和右侧原稿标注。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>页面先展示思考提示区，再展示 PK 结论和 PK 详情；底部按钮区是否出现取决于结果是否已经输出完成。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>思考过程固定为四步</strong>
+                  </div>
+                  <ul>
+                    <li>步骤顺序固定：理解用户需求、检索活动详情、对比活动结果、总结分析结果。</li>
+                    <li>前三步每步 10 秒，进度条展示假数据。</li>
+                    <li>每一步均需支持三种状态文案：等待中、进行中、已完成。</li>
+                    <li>轮播图展示参与对比的产品详情小图 + 1 张默认图。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>结果输出采用流式分阶段呈现</strong>
+                  </div>
+                  <ul>
+                    <li>PK结论、PK详情-默认、PK详情-看不同都需要二次处理 AI 输出结果。</li>
+                    <li>当 PK 结论思考完成后，开始流式输出结果内容。</li>
+                    <li>PK详情-看不同可以异步生成，但需要纳入统一结果区说明。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>按钮显示时机受输出状态控制</strong>
+                  </div>
+                  <ul>
+                    <li>在 PK 详情未输出完成前，不显示底部按钮栏和 PK 详情操作按钮。</li>
+                    <li>此时下拉按钮保持加载状态。</li>
+                    <li>结果输出全部完成后，显示底部按钮栏、PK详情操作按钮，下拉按钮转为可点击并直接滑到底部。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>思考过程包含 PK 结论和 PK详情-默认分析的思考；四步文案固定；每一步有等待 / 正在 / 已完成三种状态。</p>
+                <p>输出结果分为 PK结论、PK详情-默认、PK详情-看不同；PK结论思考完成后开始输出；结果未完成前不显示底部按钮。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="default-detail">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">05 默认详情表格</div>
+              <h2>PK详情-默认</h2>
+              <p>把默认对比表格拆成“本地字段”“AI 结果字段”“行程展示规则”三组，让研发和测试都能快速定位字段来源与呈现方式。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>直接截取原始 Axure 文档里“PK详情-默认”区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/default-detail.png" alt="PK详情默认原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档中“PK详情-默认”对应区域，保留默认表格、行程展示和右侧原稿标注。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>默认表格从上到下依次关注活动/线路、套餐起价、评价与退改政策，再往下看 AI 字段和行程模块。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>本地字段直接渲染</strong>
+                  </div>
+                  <ul>
+                    <li>活动/线路：产品小图、线路 + 套餐名称、产品名称，三者都可跳转产品详情。</li>
+                    <li>线路 + 套餐名称最多展示 6 个字符，超出以省略号处理。</li>
+                    <li>套餐起价、产品评价、退改政策均来自本地结构化字段。</li>
+                    <li>无评分时显示固定文案“暂无评价（新产品）”。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>AI 分析字段统一二次处理后展示</strong>
+                  </div>
+                  <ul>
+                    <li>主走线路、集散点：文本展示。</li>
+                    <li>核心亮点：每个亮点前统一补“·”。</li>
+                    <li>人员配比、跟拍服务：文本展示。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>行程展示规则</strong>
+                  </div>
+                  <ul>
+                    <li>按两个套餐中最大的行程天数展示每日维度。</li>
+                    <li>每天拆分为景点、项目、住宿、餐食四项。</li>
+                    <li>单项无值展示“-”；四项都无值时展示“行程已结束”。</li>
+                    <li>行程默认折叠中间天数，点击后再展开全部。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>本地字段包括活动/线路、套餐起价、产品评价、退改政策；AI 字段包括主走线路、集散点、核心亮点、行程、人员配比、跟拍服务。</p>
+                <p>行程按最大套餐行程天数展示，并拆分景点、项目、住宿、餐食四项；无值展示“-”，四项无值展示“行程已结束”。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="diff-detail">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">06 筛选与看不同</div>
+              <h2>PK详情-看不同与筛选维度</h2>
+              <p>合并“看不同”和“筛选维度”两个强关联功能，统一说明按钮切换、字段分组规则、维度筛选行为以及更多维度弹窗。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>直接截取原始 Axure 文档里“PK详情-看不同 / 筛选维度”区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/diff-filter.png" alt="PK详情看不同与筛选维度原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档中“PK详情-看不同”和“筛选维度”对应区域，保留按钮切换、筛选弹窗和右侧原稿标注。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>先看顶部“看不同 / 看细节”和“筛选维度”按钮，再看筛选维度弹窗中的维度标签、重置、更多维度和确定按钮。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>“看不同”与“看细节”按钮切换</strong>
+                  </div>
+                  <ul>
+                    <li>点击“看不同”后，按钮文案切换为“看细节”。</li>
+                    <li>同时刷新下方表格为“看不同”模式。</li>
+                    <li>再次点击“看细节”则切回默认表格模式。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>看不同表格字段分三类</strong>
+                  </div>
+                  <ul>
+                    <li>固定字段：活动/线路、套餐起价，始终展示。</li>
+                    <li>文本匹配字段：完全相同则不展示，如产品评价、主走线路、集散点、行程天数、跟拍服务、退改政策。</li>
+                    <li>AI 输出字段：核心亮点、行程景点、特色体验、住宿酒店、餐食情况、人员配比，根据相同点/不同点规则输出。</li>
+                    <li>退改政策需要特殊处理：免费退改时间点一致时在总结区展示一致点，不一致时两侧分别对比。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>筛选维度规则</strong>
+                  </div>
+                  <ul>
+                    <li>默认表格固定维度：活动/线路、套餐起价、产品评价、行程天数。</li>
+                    <li>看不同表格固定维度：活动/线路、套餐起价。</li>
+                    <li>“全部”默认选中，且与其他维度互斥；其他维度支持多选。</li>
+                    <li>重置后恢复默认“全部”状态。</li>
+                    <li>点击确定后，同时刷新默认表格和看不同表格，只展示固定维度 + 已选维度。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">4</span>
+                    <strong>更多维度弹窗</strong>
+                  </div>
+                  <ul>
+                    <li>点击“更多维度”打开弹窗。</li>
+                    <li>维度类型支持多选，自定义文本最长 200 字。</li>
+                    <li>提交时任一项都为空则提示“请填写反馈内容”。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>看不同模式下，字段分固定字段、文本匹配字段、AI 输出字段三类；完全一致的文本字段不展示。</p>
+                <p>筛选维度默认选中“全部”；固定维度不参与筛选；点击确定后对默认表格和看不同表格同时生效。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="actions">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">07 页面操作</div>
+              <h2>底部功能、反馈与咨询</h2>
+              <p>整合点赞、点踩、分享、更多维度、咨询客服、重新对比等底部操作，并补充反馈弹窗和选择咨询活动弹窗规则。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>按原稿里的实际功能页拆分为 5 张原图</span>
+              </div>
+              <div class="origin-grid">
+                <div class="origin-tile">
+                  <img src="./image/feedback-entry.png" alt="反馈弹窗原稿图" />
+                  <p>原稿图 1：点赞反馈提醒 / 使用反馈入口页。</p>
+                </div>
+                <div class="origin-tile">
+                  <img src="./image/share-mask.png" alt="分享蒙层原稿图" />
+                  <p>原稿图 2：分享蒙层提示。</p>
+                </div>
+                <div class="origin-tile">
+                  <img src="./image/more-dimensions.png" alt="更多维度对比原稿图" />
+                  <p>原稿图 3：更多维度对比弹窗。</p>
+                </div>
+                <div class="origin-tile">
+                  <img src="./image/select-consult.png" alt="选择咨询活动原稿图" />
+                  <p>原稿图 4：选择咨询活动弹窗。</p>
+                </div>
+                <div class="origin-tile">
+                  <img src="./image/customer-qr.png" alt="客服二维码原稿图" />
+                  <p>原稿图 5：客服二维码 / 企微获客弹窗。</p>
+                </div>
+              </div>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图组对应顺序：</strong>原稿图 1 为点赞反馈提醒 / 使用反馈入口页，原稿图 2 为分享蒙层，原稿图 3 为更多维度对比弹窗，原稿图 4 为选择咨询活动，原稿图 5 为客服二维码 / 企微获客弹窗。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>点赞 / 点踩 / 分享</strong>
+                  </div>
+                  <ul>
+                    <li>点赞：点击推送反馈提醒，点击整条可打开使用反馈弹窗。</li>
+                    <li>点踩：点击后直接打开使用反馈弹窗。</li>
+                    <li>分享：结果页支持分享，弹出分享蒙层；蒙层点击任意位置关闭。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>更多维度 / 咨询客服 / 重新对比</strong>
+                  </div>
+                  <ul>
+                    <li>更多维度：打开更多维度对比弹窗。</li>
+                    <li>咨询客服：若两个套餐客服相同，直接打开客服二维码；若不同，先弹出选择咨询活动。</li>
+                    <li>重新对比：重新打开选择活动弹窗；再次对比后不保留上次结果历史。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">3</span>
+                    <strong>点踩反馈弹窗规则</strong>
+                  </div>
+                  <ul>
+                    <li>问题类型支持多选。</li>
+                    <li>其他问题文本最长 200 字。</li>
+                    <li>提交时若所有输入为空，提示“请填写反馈内容”。</li>
+                  </ul>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">4</span>
+                    <strong>选择咨询活动弹窗规则</strong>
+                  </div>
+                  <ul>
+                    <li>展示产品小图、产品名称、选择按钮。</li>
+                    <li>整个产品卡片都作为可点击交互区。</li>
+                    <li>点击后按活动客服配置打开对应获客链接或客服弹窗。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>点赞、点踩、分享、更多维度、咨询客服、重新对比都位于结果页底部功能区；点踩反馈与更多维度弹窗都要求支持多选与 200 字自定义输入。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="req-section" id="share">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">08 分享场景</div>
+              <h2>分享结果页</h2>
+              <p>单独整理分享场景，强调与普通 PK 结果页的差异点，包括数据时效性展示和底部发起线路PK入口。</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="visual-card">
+              <div class="visual-title">
+                <strong>原稿对应图</strong>
+                <span>直接截取原始 Axure 文档里“PK结果分享页”区域</span>
+              </div>
+              <figure class="origin-shot">
+                <img src="./image/share-result.png" alt="PK结果分享页原稿图" />
+                <figcaption class="origin-caption">这里直接展示原始 Axure 文档中“PK结果分享页”对应区域，包含数据时效性展示和底部“发起线路PK”按钮。</figcaption>
+              </figure>
+            </div>
+            <div class="detail-card">
+              <p class="mapping-guide"><strong>图中对应顺序：</strong>先看顶部数据更新时间，再看页面内容主体，最后看底部“发起线路PK”按钮。</p>
+              <div class="mapping-list">
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">1</span>
+                    <strong>增加分享结果生成时间</strong>
+                  </div>
+                  <p>与普通 PK 结果页不同，分享结果页必须新增“本次分享的 PK 结果生成时间”，展示格式为日期 + 时分，用于提示结果时效性。</p>
+                </article>
+                <article class="mapping-item">
+                  <div class="mapping-item-head">
+                    <span class="mapping-num">2</span>
+                    <strong>底部按钮改为“发起线路PK”</strong>
+                  </div>
+                  <ul>
+                    <li>分享页底部不展示普通结果页的完整操作区。</li>
+                    <li>仅展示“发起线路PK”按钮。</li>
+                    <li>点击后重新打开选择活动弹窗；若用户发起新的对比，则页面切换回普通 PK 结果页逻辑。</li>
+                  </ul>
+                </article>
+              </div>
+              <details>
+                <summary>原始需求摘录</summary>
+                <p>分享结果页增加数据时效性展示，即本次分享的 PK 结果生成时间；底部按钮改为发起线路PK，点击后重新打开选择活动弹窗。</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer">
+          <p>
+            本页已将原 `产品详情.html` 的散点式标注重整为模块化结构文档，并且已经切换为原始截图版本。后续如果你还要继续细化，我建议直接沿着当前结构补两类内容：
+            一类是每张原图里的字段来源说明，另一类是每个模块下的边界/异常补充规则。
+          </p>
+        </section>
+      </main>
+    </div>
+  
+
+</body></html>
