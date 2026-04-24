@@ -1,6 +1,6 @@
 ---
 name: requirements-testcase-writer
-description: Use this skill when the user wants to generate, supplement, or update QA test cases from requirement documents in the repository, especially files or folders under `requirments/` such as Axure-exported HTML, Markdown, or text specs, and write the result into `testcases/`.
+description: Use this skill when the user wants to generate, supplement, or update QA test cases from requirement documents in the repository, especially files or folders under `requirments/`, and default to the user's XMind testcase style when writing results into `testcases/`.
 ---
 
 # Requirements Testcase Writer
@@ -25,6 +25,8 @@ Typical source inputs:
 Important repo convention:
 
 - The source directory is intentionally spelled `requirments/`. Do not silently switch to `requirements/`.
+- Unless the user explicitly asks for another format, the default deliverable in this repo is the user's XMind-style testcase output.
+- In this repo, do not create or maintain markdown testcase twins unless the user explicitly asks for markdown.
 
 ## Workflow
 
@@ -81,13 +83,13 @@ Default output rules:
 
 - write into `testcases/`
 - place the testcase file directly under `testcases/`, not in nested feature folders
-- name the file as `<项目名称>测试用例.md`
+- name the final deliverable as `<项目名称>测试用例.xmind`
 - when the source folder or feature name is Chinese, keep the Chinese project name in the filename
-- keep the document title consistent with the filename, using `<项目名称>测试用例`
+- do not create a sibling markdown testcase file unless the user explicitly requests one
 
 Project name rule:
 
-- prefer the feature folder name as the project name, for example `requirments/产品pk/` -> `testcases/产品pk测试用例.md`
+- prefer the feature folder name as the project name, for example `requirments/产品pk/` -> `testcases/产品pk测试用例.xmind`
 - if the input is a single requirement file, use the closest stable feature name instead of the raw filename when that better matches the project scope
 - only fall back to a single-page name when the file clearly represents an independent feature
 
@@ -101,11 +103,12 @@ If a testcase file already exists:
 
 Follow the template and checklist in [references/testcase-format.md](references/testcase-format.md).
 When the user wants XMind-style output, also follow the screenshot-based sample in [references/xmind-screenshot-style.md](references/xmind-screenshot-style.md).
+When `maitao-testcase-style` also applies, treat it as the final style authority for wording, case granularity, and XMind branch rhythm.
 
 Quality bar:
 
 - use the screenshot-based XMind structure as the default testcase style for this repo
-- when the user asks for testcase generation in this repo, prefer generating/updating a real `.xmind` file in `testcases/`; markdown is only an intermediate draft unless the user explicitly asks for markdown only
+- when the user asks for testcase generation in this repo, generate/update a real `.xmind` file in `testcases/` and do not sync a markdown copy unless explicitly requested
 - use page structure as the primary organizing principle: `页面 -> 页面区域/元素 -> 场景/用例`; business rules are secondary and should be attached to the relevant page node
 - each case must be testable and have a clear scenario boundary
 - preconditions must be embedded into `测试步骤`; do not keep a separate `前置条件` column unless the user explicitly asks for that schema
@@ -126,6 +129,16 @@ Quality bar:
 - Keep output in Chinese when the source documents are in Chinese.
 - Prefer the user's existing testcase style when a sample testcase file already exists in the repo.
 - Default to the user's screenshot-based XMind testcase style for future testcase generation in this repo.
+- Treat backend `预订产品价格设置` as a reusable default business knowledge point in this workspace when writing testcase logic for price, start-price selection, date-price display, and人数/价格组合 branches.
+- For `预订产品价格设置` rows, use this default interpretation unless the requirement explicitly overrides it:
+  - `成人数=1, 儿童数=0` -> 成人单价
+  - `成人数=0, 儿童数=1` -> 儿童单价
+  - `成人数>0 且 儿童数>0` -> 组合价
+- When writing start-price testcases for the current repo's calendar/detail requirements:
+  - 成人单价 only participates in adult start-price matching
+  - 儿童单价 only participates in child start-price matching
+  - 组合价 does not directly participate in adult/child single-price matching unless the requirement explicitly says otherwise
+  - if the target single-price rows are absent and the requirement says to fallback to the lowest visible/sellable price,组合价 can be covered under the fallback branch
 - Treat the user's adjusted testcase files as the highest-priority style authority. For this workspace, default to: `按页面元素写` + `结合需求描述写` + `按页面从上到下顺序分模块写`.
 - When the user asks for XMind format or shows an XMind screenshot/sample, mirror that sample's node structure: `根节点 -> +页面/模块节点 -> +功能节点 -> 用例节点 -> 步骤内容节点 -> 预期结果内容节点`.
 - The screenshot example at [references/xmind-screenshot-style.md](references/xmind-screenshot-style.md) is the authoritative style sample. Reuse its branch rhythm, wording style, and node granularity.
