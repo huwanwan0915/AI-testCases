@@ -1,14 +1,14 @@
 ---
 name: maitao-testcase-style
-description: Follow the user's 麦淘内部测试用例 style when writing or rewriting testcases: XMind-first output, page-ordered modules, and integrated large cases based on `requirments/+麦淘旅行家测试用例（落地页）.md`.
+description: "Apply the user's 麦淘内部测试用例风格 when the user explicitly asks for '按我的风格'、'按麦淘旅行家用例风格'、'按脑图/XMind风格' writing, or when the task references `requirments/+麦淘旅行家测试用例（落地页）.md`, same-style XMind exports, or an existing repo testcase already written in that style. Use this skill as the style authority for testcase wording, case granularity, page-ordered modules, and XMind branch rhythm; it is style-specific rather than the general testcase-generation workflow."
 ---
 
 # 麦淘内部测试用例风格指南（XMind优先）
 
 ## 使用时机
 - 当用户要求“按照我的风格”“按照麦淘旅行家用例风格”“按脑图/XMind风格”编写或更新测试用例时。
-- 当用户未额外指定格式，但任务是在本仓库中生成/补充内部测试用例时，也默认按本技能的风格执行。
 - 当需求文档来自 `requirments/+麦淘旅行家测试用例（落地页）.md`、同风格脑图导出稿，或仓库内已有同风格 testcase 文件时。
+- 当 `requirements-testcase-writer` 已负责通用“从需求生成用例”的流程，而当前任务还需要继续沿用麦淘既有措辞、颗粒度、模块顺序和 XMind 分支节奏时。
 - 若用户只需标准表格或西式模板，请勿启用本技能。
 
 ## 默认交付格式
@@ -35,11 +35,7 @@ description: Follow the user's 麦淘内部测试用例 style when writing or re
 - 数字或字母编号与原文一致（`1-d-1）` 等结构不要改写）。
 - 语气保持客观陈述，例如“显示”“提示”“进入”。
 - 涉及金额、时间、链接，要抄原文，不自行推测。
-- 对后台 `预订产品价格设置` 这类常用配置，后续默认按仓库已确认的业务语义理解并直接写入用例：
-  - `1成人0儿童` = 成人单价
-  - `0成人1儿童` = 儿童单价
-  - `成人数>0 且 儿童数>0` = 组合价
-- 若需求是在写起价逻辑，默认先匹配目标单价，再把组合价放入兜底或特殊分支；除非需求明确写“组合价直接参与起价匹配”。
+- 涉及仓库通用业务口径，例如 `预订产品价格设置`、起价匹配、日期价格展示等，沿用 `requirements-testcase-writer` 中定义的默认业务解释；本技能不重复定义业务规则。
 - 默认不要先按抽象功能点或规则点分组；优先写成“页面区域/元素 -> 场景”。
 - 模块命名贴近页面真实元素，例如 `头图`、`悬浮按钮`、`弹窗`、`列表`、`卡片`、`底部栏`，避免泛化命名如 `规则校验`、`功能模块`、`列表逻辑`。
 - 如果用户偏好“大 case”，优先把一个模块内的显示逻辑、切换交互、边界情况收敛到同一个 `###` 用例标题下，再在预期里用 `a.` `b.` `c.` `d.` 展开。

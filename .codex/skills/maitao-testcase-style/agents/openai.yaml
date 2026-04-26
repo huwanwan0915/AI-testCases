@@ -1,0 +1,7 @@
+interface:
+  display_name: "麦淘测试用例风格"
+  short_description: "按麦淘内部既有 XMind 用例风格组织和表述"
+  default_prompt: "Use $maitao-testcase-style to write or rewrite testcases in the user's 麦淘内部 XMind testcase style."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Requirements Testcase Writer"
-  short_description: "Generate QA cases from repo requirement docs"
-  default_prompt: "Use $requirements-testcase-writer to generate or update test cases from files under `requirments/`."
+  display_name: "需求测试用例编写"
+  short_description: "从仓库需求文档生成、补充或更新 QA 测试用例"
+  default_prompt: "Use $requirements-testcase-writer to generate or update QA testcases from files under `requirments/`."

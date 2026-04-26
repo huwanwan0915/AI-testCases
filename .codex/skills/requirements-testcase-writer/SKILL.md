@@ -1,6 +1,6 @@
 ---
 name: requirements-testcase-writer
-description: Use this skill when the user wants to generate, supplement, or update QA test cases from requirement documents in the repository, especially files or folders under `requirments/`, and default to the user's XMind testcase style when writing results into `testcases/`.
+description: "Use this skill for the general workflow of generating, supplementing, or updating QA test cases from requirement documents in the repository, especially files or folders under `requirments/`, with output written into `testcases/` in the repo's default XMind-oriented structure. When the user explicitly asks for the 麦淘/个人既有 testcase style, or the task clearly matches `requirments/+麦淘旅行家测试用例（落地页）.md` and same-style local samples, also apply `maitao-testcase-style` as the final wording and structure authority."
 ---
 
 # Requirements Testcase Writer
@@ -73,8 +73,8 @@ Structure the testcase set in this repo with these defaults:
 - attach business rules, data states, login states, empty states, and exception paths under the page element or page region where they actually occur
 - do not start by grouping cases into abstract headings such as `规则校验`、`列表逻辑`、`功能点汇总` unless the page really has no stable visual structure
 - when one rule affects a specific control or section, place that testcase under that control/section instead of creating a detached rule-only module
-- for UI-dense modules, prefer `一个模块下 1~3 个完整 case` over many tiny fragmented cases; only split into many sibling cases when the user explicitly prefers fine granularity
-- before writing each case, first decide `这个 case 要验证哪些页面元素`、`这些元素之间有哪些切换/联动交互`、`哪些显示逻辑需要用 a/b/c/d 穷举`
+- prefer cohesive, testable cases over many tiny fragmented cases unless the user explicitly asks for very fine granularity
+- before writing each case, decide which visible elements, interactions, and state changes the case is meant to verify
 - write from a tester's and user's perspective: ask what the user can see, click, switch, close, reopen, expand, collapse, or compare on this module, then turn that into expectations
 
 ### 4. Write the output file
@@ -99,6 +99,15 @@ If a testcase file already exists:
 - keep stable case IDs when possible
 - append newly discovered cases and clearly mark changed assumptions
 
+## Skill Coordination
+
+- Use this skill as the primary workflow for requirement-to-testcase conversion in this repo.
+- If the task explicitly asks for the user's existing 麦淘/个人 testcase style, or the local evidence clearly points to that style, also apply `maitao-testcase-style`.
+- When both skills apply, split responsibility this way:
+  - `requirements-testcase-writer`: source discovery, requirement normalization, coverage design, output path/file decisions, and generic testcase quality
+  - `maitao-testcase-style`: wording rhythm, case granularity, page-module naming, XMind branch structure, and style-specific anti-pattern avoidance
+- If there is no clear style signal, stay with this skill's default repo-level XMind conventions and do not implicitly assume the full 麦淘 style.
+
 ## Output Standard
 
 Follow the template and checklist in [references/testcase-format.md](references/testcase-format.md).
@@ -117,8 +126,6 @@ Quality bar:
 - separate UI display checks from business-rule checks when they can fail independently
 - preserve numbered and lettered branches when the requirement is naturally a rule tree or state matrix
 - explicitly mark assumptions and unresolved questions instead of hiding them
-- for page-style modules, expected results should usually start with page element checks, then continue with interaction changes, then rule branches
-- when one module contains many coupled checks, keep them in one large testcase and enumerate the display/interaction matrix inside `预期结果` with `a.` `b.` `c.` `d.`
 - do not stop at static display; explicitly cover user-driven interaction changes such as tab switch, category switch, line/package switch, filter toggle, scroll, close, reopen, expand, collapse, and login-state transition when they exist in the requirement or screenshot
 - if the user has already adjusted one testcase file into the target company style, treat that file as the highest-priority local style reference for subsequent rewrites
 - if the user provides an XMind screenshot sample, follow the screenshot's node granularity, naming style, and sentence rhythm ahead of the generic template
@@ -139,47 +146,18 @@ Quality bar:
   - 儿童单价 only participates in child start-price matching
   - 组合价 does not directly participate in adult/child single-price matching unless the requirement explicitly says otherwise
   - if the target single-price rows are absent and the requirement says to fallback to the lowest visible/sellable price,组合价 can be covered under the fallback branch
-- Treat the user's adjusted testcase files as the highest-priority style authority. For this workspace, default to: `按页面元素写` + `结合需求描述写` + `按页面从上到下顺序分模块写`.
-- When the user asks for XMind format or shows an XMind screenshot/sample, mirror that sample's node structure: `根节点 -> +页面/模块节点 -> +功能节点 -> 用例节点 -> 步骤内容节点 -> 预期结果内容节点`.
-- The screenshot example at [references/xmind-screenshot-style.md](references/xmind-screenshot-style.md) is the authoritative style sample. Reuse its branch rhythm, wording style, and node granularity.
-- Also follow the canvas settings captured in [references/xmind-screenshot-style.md](references/xmind-screenshot-style.md): prefer `逻辑图` canvas, `晨曦` color scheme, and enabled `彩虹分支`.
-- In XMind-friendly output, use plain numbered lines under `测试步骤` and `预期结果`, not markdown tables.
-- In XMind-friendly output, keep numbered lines normalized as `1. 文案`, not `1.文案`.
-- Keep branch names short and stable so they can be used directly as XMind nodes.
-- When the user has already rewritten part of the testcase in XMind, mirror that rewritten branch structure instead of re-abstracting it back into generic modules.
-- In screenshot-driven XMind output, prefer concise requirement-native wording such as `首次进入`、`刷新页面`、`不执行pk按钮动效`; do not automatically rewrite them into more formal but less similar phrases.
-- Avoid generic duplicated module names such as `列表模块` or `基础模块`. If a module name would be vague or repeated, rename it to the concrete page/function name, or collapse that level and use the testcase title directly.
+- In XMind-oriented output, mirror the local screenshot/sample structure before inventing a new one.
+- In XMind-oriented output, use plain numbered lines such as `1. 文案`; avoid markdown tables unless the user explicitly asks for them.
+- Keep branch names short, stable, and directly usable as XMind nodes.
 - Prefer concise but complete testcase titles that describe one scenario.
-- When the user prefers `按模块写到一个用例case中`, treat one visible module as one integrated testcase first, and put the state matrix into the expected-result node instead of exploding it into many tiny testcase siblings.
-- For integrated module testcases, use this default order inside `预期结果`:
-  1. 页面元素有哪些
-  2. 默认展示/默认选中是什么
-  3. 切换交互后怎么变化
-  4. a/b/c/d 条件分支怎么显示
-  5. 异常/空态/边界怎么反馈
-- If a label, badge, button state, or field visibility depends on multiple conditions, enumerate all meaningful combinations with `a.` `b.` `c.` `d.` rather than writing one vague sentence.
-- For cards, lists, dialogs, tables, and bottom bars, actively check whether the case should mention visible sub-elements such as title, image, badge, score, price, tabs, tags, buttons, close icon, selected state, and empty-state CTA.
+- For integrated, UI-dense modules, capture both element inventory and key interaction/state changes in the same testcase when that reads more clearly.
+- If a label, badge, button state, or field visibility depends on multiple conditions, enumerate the meaningful combinations instead of writing one vague sentence.
 - Put setup, data state, login state, page-entry state, and other preconditions into the test steps, usually as step 1 or the first few ordered steps.
 - Group related cases under a module heading instead of forcing everything into one flat list.
 - Do not keep many cases under the same overly broad `模块` name without structure. When needed, split into sub-modules or use more specific testcase titles.
-- When building module headings, scan the page from top to bottom and use real page areas or controls such as `头图`、`悬浮按钮`、`选择活动弹窗`、`产品卡片`、`底部栏`、`PK结论`、`PK详情`; avoid inventing detached headings such as `规则模块` or `能力汇总`.
+- When building module headings, scan the page from top to bottom and use real page areas or controls instead of detached abstract headings.
 - If an existing testcase draft is organized by abstract rules, rewrite it back into page order before extending it.
 - For one page, prefer this decision order: first decide page sections by visible layout, then place scenarios under each section, then append normal/abnormal/boundary variants for that section.
-- If a module still feels thin after drafting, check whether you missed:
-  - page element inventory
-  - switch interactions
-  - selection linkage
-  - default state vs switched state
-  - label/badge visibility matrix
-  - empty state and return path
-- Treat the following as strong anti-patterns that usually require rewriting before delivery:
-  - `写碎了`: one visible module is split into many tiny sibling cases that each verify only one sentence, while the user's preferred style is integrated large cases
-  - `缺页面元素`: the case talks about rules but never states what visible controls/fields/cards/tabs/buttons actually appear on screen
-  - `缺交互`: the case only checks initial display, but skips tab switching, tag switching, line/package switching, filter toggling, expand/collapse, close/reopen, or login transition that the page obviously supports
-  - `缺显示矩阵`: the case says “按规则显示” for labels, badges, selected states, visibility, or button states without enumerating the meaningful condition combinations
-  - `假模块`: headings such as `规则校验`、`功能汇总`、`列表逻辑` are used even though the page has stable visual modules that should be used instead
-  - `只抄需求不转测试`: the output repeats requirement prose but does not convert it into observable steps and expected results
-  - `只写正常流`: the case covers only the happy path and omits empty state, abnormal feedback, blocked actions, or return path
 - In this repo's XMind style, second-level nodes usually use `+页面/模块名`, third-level nodes use `+功能节点`, and testcase nodes usually do not need a `+`.
 - For real `.xmind` output, do not create standalone nodes named `测试步骤` or `预期结果`; place the numbered step text directly in one child node and place the numbered expected-result text directly in its child node, matching the screenshot sample.
 - For real `.xmind` output in this repo, prefer canvas-level settings aligned to the screenshot sample: `画布=逻辑图`, `配色方案=晨曦`, `彩虹分支=开启`, `同级主题对齐=开启`.
@@ -193,11 +171,10 @@ Quality bar:
 
 Before finalizing, quickly ask:
 
-1. 有没有哪个模块本来应该是一个大 case，却被我拆成很多零碎 case？
-2. 这个 case 里有没有先把页面元素说清楚？
-3. 这个模块的切换交互我有没有漏写？
-4. 标签/角标/显隐/默认选中逻辑有没有用 `a.` `b.` `c.` `d.` 穷举关键组合？
-5. 我写的是测试语言，还是只是把需求原文换行重排了一遍？
+1. 页面模块是不是按用户实际看到的顺序组织，而不是按抽象规则硬分组？
+2. 每个 case 有没有明确步骤、可观察预期，以及必要的正常/异常/边界覆盖？
+3. 页面上的关键交互、状态切换、返回路径和数据联动有没有漏掉？
+4. 我写的是可执行的测试语言，还是只是把需求原文换行重排了一遍？
 
 If the answer to any of these is “有”, revise before delivering.
 
