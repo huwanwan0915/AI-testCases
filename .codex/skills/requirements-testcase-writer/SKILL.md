@@ -46,12 +46,14 @@ Extract the parts that can drive tests:
 - states, empty states, error states, and boundary conditions
 - dependencies between pages
 - tracking or analytics requirements such as exposure, click, or conversion events
+- all rule dimensions that can affect outcomes, such as user type, inventory, time, price type, quantity type, button state, visibility state, selected state, and fallback path
 
 When the source is Axure HTML:
 
 - use the page title, visible text, labels, buttons, headings, and repeated blocks as the primary signal
 - combine related pages in the same folder to reconstruct the end-to-end flow
 - do not invent backend rules or hidden validation logic unless the requirement explicitly shows them
+- when the page contains rule prose like `如果`、`当`、`仅当`、`A有/B无`、`显示/不显示`、`置灰/可点`、`命中/兜底`, first extract the condition dimensions and enumerate the meaningful combinations before writing cases
 
 ### 3. Design the testcase set
 
@@ -73,9 +75,44 @@ Structure the testcase set in this repo with these defaults:
 - attach business rules, data states, login states, empty states, and exception paths under the page element or page region where they actually occur
 - do not start by grouping cases into abstract headings such as `规则校验`、`列表逻辑`、`功能点汇总` unless the page really has no stable visual structure
 - when one rule affects a specific control or section, place that testcase under that control/section instead of creating a detached rule-only module
-- prefer cohesive, testable cases over many tiny fragmented cases unless the user explicitly asks for very fine granularity
-- before writing each case, decide which visible elements, interactions, and state changes the case is meant to verify
+- for UI-dense modules, prefer `一个模块下 1~3 个完整 case` over many tiny fragmented cases; only split into many sibling cases when the user explicitly prefers fine granularity
+- before writing each case, first decide `这个 case 要验证哪些页面元素`、`这些元素之间有哪些切换/联动交互`、`哪些显示逻辑需要用 a/b/c/d 穷举`
+- before writing each case, also decide `这个需求里有哪些条件维度`、`这些维度能组成哪些有业务意义的排列组合`、`哪些组合是正常/缺失/并存/兜底/空态`
 - write from a tester's and user's perspective: ask what the user can see, click, switch, close, reopen, expand, collapse, or compare on this module, then turn that into expectations
+
+### 3.1 Rule-matrix decomposition is mandatory
+
+When a requirement contains conditional logic, you must decompose it into a rule matrix before writing the testcase.
+
+Mandatory decomposition process:
+
+1. identify every dimension that changes the result
+2. list the possible values of each dimension
+3. enumerate all business-meaningful combinations
+4. merge only truly equivalent combinations
+5. write the remaining combinations into testcase expectations using `a.` `b.` `c.` `d.` branches
+
+Typical dimensions:
+
+- presence vs absence of a target field or price row
+- single value only vs multiple values coexisting
+- default branch vs fallback branch
+- visible vs hidden
+- enabled vs disabled
+- logged in vs logged out
+- in stock vs low stock vs sold out
+- current time before/during/after activity
+- same amount vs different amount
+- adult/child/single price vs combination price
+
+Minimum branch coverage expectation when applicable:
+
+- normal branch
+- partial-missing branch
+- coexistence branch
+- fallback-hit branch
+- all-missing or empty branch
+- mutually exclusive or blocked branch
 
 ### 4. Write the output file
 
@@ -125,6 +162,7 @@ Quality bar:
 - expected results must be observable
 - separate UI display checks from business-rule checks when they can fail independently
 - preserve numbered and lettered branches when the requirement is naturally a rule tree or state matrix
+- when the requirement contains a state matrix or condition matrix, explicitly enumerate the meaningful combinations instead of summarizing them as `按规则显示`
 - explicitly mark assumptions and unresolved questions instead of hiding them
 - do not stop at static display; explicitly cover user-driven interaction changes such as tab switch, category switch, line/package switch, filter toggle, scroll, close, reopen, expand, collapse, and login-state transition when they exist in the requirement or screenshot
 - if the user has already adjusted one testcase file into the target company style, treat that file as the highest-priority local style reference for subsequent rewrites
@@ -141,6 +179,11 @@ Quality bar:
   - `成人数=1, 儿童数=0` -> 成人单价
   - `成人数=0, 儿童数=1` -> 儿童单价
   - `成人数>0 且 儿童数>0` -> 组合价
+- For requirement-derived rule writing in this workspace, default to this sequence:
+  1. 先拆条件维度
+  2. 再列排列组合
+  3. 再筛出有业务意义的组合
+  4. 最后把这些组合写进测试用例
 - When writing start-price testcases for the current repo's calendar/detail requirements:
   - 成人单价 only participates in adult start-price matching
   - 儿童单价 only participates in child start-price matching
@@ -150,14 +193,39 @@ Quality bar:
 - In XMind-oriented output, use plain numbered lines such as `1. 文案`; avoid markdown tables unless the user explicitly asks for them.
 - Keep branch names short, stable, and directly usable as XMind nodes.
 - Prefer concise but complete testcase titles that describe one scenario.
+- When the user prefers `按模块写到一个用例case中`, treat one visible module as one integrated testcase first, and put the state matrix into the expected-result node instead of exploding it into many tiny testcase siblings.
+- For integrated module testcases, use this default order inside `预期结果`:
+  1. 页面元素有哪些
+  2. 默认展示/默认选中是什么
+  3. 切换交互后怎么变化
+  4. a/b/c/d 条件分支怎么显示
+  5. 异常/空态/边界怎么反馈
 - For integrated, UI-dense modules, capture both element inventory and key interaction/state changes in the same testcase when that reads more clearly.
-- If a label, badge, button state, or field visibility depends on multiple conditions, enumerate the meaningful combinations instead of writing one vague sentence.
+- If a label, badge, button state, or field visibility depends on multiple conditions, enumerate all meaningful combinations with `a.` `b.` `c.` `d.` rather than writing one vague sentence.
+- If the requirement uses conditional wording such as `若`、`仅当`、`否则`、`同时`、`只作为`、`不参与`、`回退到`, treat it as a strong signal that you must enumerate the branch matrix explicitly.
+- For cards, lists, dialogs, tables, and bottom bars, actively check whether the case should mention visible sub-elements such as title, image, badge, score, price, tabs, tags, buttons, close icon, selected state, and empty-state CTA.
 - Put setup, data state, login state, page-entry state, and other preconditions into the test steps, usually as step 1 or the first few ordered steps.
 - Group related cases under a module heading instead of forcing everything into one flat list.
 - Do not keep many cases under the same overly broad `模块` name without structure. When needed, split into sub-modules or use more specific testcase titles.
 - When building module headings, scan the page from top to bottom and use real page areas or controls instead of detached abstract headings.
 - If an existing testcase draft is organized by abstract rules, rewrite it back into page order before extending it.
 - For one page, prefer this decision order: first decide page sections by visible layout, then place scenarios under each section, then append normal/abnormal/boundary variants for that section.
+- If a module still feels thin after drafting, check whether you missed:
+  - page element inventory
+  - switch interactions
+  - selection linkage
+  - default state vs switched state
+  - label/badge visibility matrix
+  - empty state and return path
+- Treat the following as strong anti-patterns that usually require rewriting before delivery:
+  - `写碎了`: one visible module is split into many tiny sibling cases that each verify only one sentence, while the user's preferred style is integrated large cases
+  - `缺页面元素`: the case talks about rules but never states what visible controls/fields/cards/tabs/buttons actually appear on screen
+  - `缺交互`: the case only checks initial display, but skips tab switching, tag switching, line/package switching, filter toggling, expand/collapse, close/reopen, or login transition that the page obviously supports
+  - `缺显示矩阵`: the case says “按规则显示” for labels, badges, selected states, visibility, or button states without enumerating the meaningful condition combinations
+  - `缺排列组合`: requirement logic clearly depends on multiple dimensions, but the testcase only writes a few samples and does not enumerate the full meaningful branch set
+  - `假模块`: headings such as `规则校验`、`功能汇总`、`列表逻辑` are used even though the page has stable visual modules that should be used instead
+  - `只抄需求不转测试`: the output repeats requirement prose but does not convert it into observable steps and expected results
+  - `只写正常流`: the case covers only the happy path and omits empty state, abnormal feedback, blocked actions, or return path
 - In this repo's XMind style, second-level nodes usually use `+页面/模块名`, third-level nodes use `+功能节点`, and testcase nodes usually do not need a `+`.
 - For real `.xmind` output, do not create standalone nodes named `测试步骤` or `预期结果`; place the numbered step text directly in one child node and place the numbered expected-result text directly in its child node, matching the screenshot sample.
 - For real `.xmind` output in this repo, prefer canvas-level settings aligned to the screenshot sample: `画布=逻辑图`, `配色方案=晨曦`, `彩虹分支=开启`, `同级主题对齐=开启`.
@@ -171,10 +239,13 @@ Quality bar:
 
 Before finalizing, quickly ask:
 
-1. 页面模块是不是按用户实际看到的顺序组织，而不是按抽象规则硬分组？
-2. 每个 case 有没有明确步骤、可观察预期，以及必要的正常/异常/边界覆盖？
-3. 页面上的关键交互、状态切换、返回路径和数据联动有没有漏掉？
-4. 我写的是可执行的测试语言，还是只是把需求原文换行重排了一遍？
+1. 有没有哪个模块本来应该是一个大 case，却被我拆成很多零碎 case？
+2. 这个 case 里有没有先把页面元素说清楚？
+3. 这个模块的切换交互我有没有漏写？
+4. 标签/角标/显隐/默认选中逻辑有没有用 `a.` `b.` `c.` `d.` 穷举关键组合？
+5. 需求里的条件维度，我有没有先拆出来并做过排列组合？
+6. 我是不是只写了几个示例，没有把正常、缺失、并存、兜底、空态这些关键分支列全？
+7. 我写的是测试语言，还是只是把需求原文换行重排了一遍？
 
 If the answer to any of these is “有”, revise before delivering.
 

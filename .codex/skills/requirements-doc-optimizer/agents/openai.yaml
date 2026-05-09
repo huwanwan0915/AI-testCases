@@ -1,6 +1,6 @@
 interface:
   display_name: "需求文档优化"
-  short_description: "重整需求文档并校正原图与描述对应关系"
+  short_description: "按页面顺序重整需求文档并校正原图与描述的一一映射关系"
   default_prompt: "Use $requirements-doc-optimizer to rewrite and reorganize a requirement document with original images and page-ordered modules."
 
 policy:
