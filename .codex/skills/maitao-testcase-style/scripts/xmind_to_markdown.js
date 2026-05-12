@@ -60,6 +60,20 @@ function attached(node) {
 
 function isCaseNode(node) {
   const kids = attached(node);
+  if (
+    kids.length === 1 &&
+    kids[0]?.title === "测试步骤" &&
+    attached(kids[0]).length === 1 &&
+    attached(kids[0])[0] &&
+    attached(attached(kids[0])[0]).length === 1 &&
+    attached(attached(kids[0])[0])[0]?.title === "预期结果" &&
+    attached(attached(attached(kids[0])[0])[0]).length === 1
+  ) {
+    return true;
+  }
+  if (kids.length === 2 && kids[0]?.title === "测试步骤" && kids[1]?.title === "预期结果") {
+    return true;
+  }
   if (kids.length !== 1) return false;
   const stepNode = kids[0];
   const stepKids = attached(stepNode);
@@ -84,12 +98,26 @@ function splitNumberedText(text) {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    if (/^(\d+[.)]|[a-zA-Z]\.)\s*/.test(trimmed)) {
+    const isTopLevelNumber = /^\d+[.)]\s*/.test(trimmed);
+    const isLetterBranch = /^[a-zA-Z]\.\s*/.test(trimmed);
+    const isCnNumber = /^\d+[）]/.test(trimmed);
+    const isBranchDetail = /^[a-zA-Z](?:-\d+)+(?:-[a-zA-Z])?[.)）]\s*/.test(trimmed);
+
+    if (isTopLevelNumber) {
       if (current) items.push(current);
       current = trimmed;
-    } else if (/^\d+[）]/.test(trimmed)) {
+    } else if (isCnNumber) {
       if (current) items.push(current);
       current = trimmed;
+    } else if (isBranchDetail) {
+      if (current) items.push(current);
+      current = trimmed;
+    } else if (isLetterBranch) {
+      if (current) {
+        current += `\n${trimmed}`;
+      } else {
+        current = trimmed;
+      }
     } else if (current) {
       current += `\n${trimmed}`;
     } else {
@@ -101,14 +129,58 @@ function splitNumberedText(text) {
   return items;
 }
 
+function flattenListTopics(node) {
+  const lines = [];
+  for (const child of attached(node)) {
+    lines.push(child.title);
+    if (attached(child).length > 0) {
+      lines.push(...flattenListTopics(child));
+    }
+  }
+  return lines;
+}
+
+function collectNodeLines(node) {
+  const lines = [node.title];
+  for (const child of attached(node)) {
+    lines.push(...collectNodeLines(child));
+  }
+  return lines;
+}
+
 function renderCase(caseNode, out) {
   out.push(`#### ${caseNode.title}`);
-  const stepNode = attached(caseNode)[0];
-  const expectNode = attached(stepNode)[0];
+  const caseChildren = attached(caseNode);
 
   out.push("");
   out.push("##### 测试步骤");
-  const steps = splitNumberedText(stepNode?.title || "");
+  let steps = [];
+  let expects = [];
+
+  if (
+    caseChildren.length === 1 &&
+    caseChildren[0]?.title === "测试步骤" &&
+    attached(caseChildren[0]).length === 1 &&
+    attached(attached(caseChildren[0])[0]).length === 1 &&
+    attached(attached(caseChildren[0])[0])[0]?.title === "预期结果" &&
+    attached(attached(attached(caseChildren[0])[0])[0]).length === 1
+  ) {
+    steps = splitNumberedText(attached(caseChildren[0])[0]?.title || "");
+    expects = splitNumberedText(attached(attached(attached(caseChildren[0])[0])[0])[0]?.title || "");
+  } else if (caseChildren.length === 1) {
+    const stepNode = caseChildren[0];
+    steps = splitNumberedText(stepNode?.title || "");
+    expects = attached(stepNode).map((child) => collectNodeLines(child).join("\n"));
+  } else if (caseChildren.length === 2 && caseChildren[0]?.title === "测试步骤" && caseChildren[1]?.title === "预期结果") {
+    steps = flattenListTopics(caseChildren[0]);
+    expects = flattenListTopics(caseChildren[1]);
+  } else {
+    const stepNode = caseChildren[0];
+    const expectNode = attached(stepNode)[0];
+    steps = splitNumberedText(stepNode?.title || "");
+    expects = splitNumberedText(expectNode?.title || "");
+  }
+
   if (steps.length === 0) {
     out.push("1. 待补测试步骤");
   } else {
@@ -117,7 +189,6 @@ function renderCase(caseNode, out) {
 
   out.push("");
   out.push("##### 预期结果");
-  const expects = splitNumberedText(expectNode?.title || "");
   if (expects.length === 0) {
     out.push("1. 待补预期结果");
   } else {

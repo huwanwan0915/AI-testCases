@@ -67,6 +67,133 @@ function topic(title, children = [], extra = {}) {
   return node;
 }
 
+function parseListPrefix(item) {
+  const normalized = item.replace(/\r/g, "");
+  const [firstLine, ...restLines] = normalized.split("\n");
+  const restText = restLines.length > 0 ? `\n${restLines.join("\n")}` : "";
+
+  let match = firstLine.match(/^(\d+)[.)]\s*(.*)$/);
+  if (match) {
+    return {
+      type: "topNumber",
+      path: [`top:${match[1]}`],
+      title: `${match[1]}. ${match[2]}`.trimEnd() + restText,
+    };
+  }
+
+  match = firstLine.match(/^([a-zA-Z])\.\s*(.*)$/);
+  if (match) {
+    return {
+      type: "letterBranch",
+      branchKey: match[1].toLowerCase(),
+      title: `${match[1]}. ${match[2]}`.trimEnd() + restText,
+    };
+  }
+
+  match = firstLine.match(/^([a-zA-Z](?:-\d+)+(?:-[a-zA-Z])?)[.)）]\s*(.*)$/);
+  if (match) {
+    const rawKey = match[1].toLowerCase();
+    const segments = rawKey.split("-");
+    const path = [];
+    for (let i = 0; i < segments.length; i += 1) {
+      path.push(`detail:${segments.slice(0, i + 1).join("-")}`);
+    }
+    return {
+      type: "branchDetail",
+      branchKey: segments[0],
+      path,
+      title: `${match[1]}）${match[2] ? match[2] : ""}`.trimEnd() + restText,
+    };
+  }
+
+  match = firstLine.match(/^(\d+)[）)]\s*(.*)$/);
+  if (match) {
+    return {
+      type: "cnNumber",
+      key: match[1],
+      title: `${match[1]}）${match[2] ? match[2] : ""}`.trimEnd() + restText,
+    };
+  }
+
+  return {
+    type: "plain",
+    title: item,
+  };
+}
+
+function buildListTopics(items, fallbackTitle) {
+  const root = { children: [] };
+  const pathMap = new Map([["", root]]);
+  let currentTopPath = "";
+  const appendChild = (parent, child) => {
+    if (Array.isArray(parent.children)) {
+      parent.children.push(child);
+      return;
+    }
+    if (!parent.children) {
+      parent.children = { attached: [] };
+    }
+    if (!Array.isArray(parent.children.attached)) {
+      parent.children.attached = [];
+    }
+    parent.children.attached.push(child);
+  };
+
+  for (const item of items.length > 0 ? items : [fallbackTitle]) {
+    const parsed = parseListPrefix(item);
+    let fullPath = [];
+
+    if (parsed.type === "topNumber") {
+      fullPath = parsed.path;
+      currentTopPath = fullPath[0];
+    } else if (parsed.type === "letterBranch") {
+      fullPath = currentTopPath ? [currentTopPath, `branch:${parsed.branchKey}`] : [`branch:${parsed.branchKey}`];
+    } else if (parsed.type === "branchDetail") {
+      fullPath = currentTopPath ? [currentTopPath, `branch:${parsed.branchKey}`, ...parsed.path] : [`branch:${parsed.branchKey}`, ...parsed.path];
+    } else if (parsed.type === "cnNumber") {
+      fullPath = currentTopPath ? [currentTopPath, `cn:${parsed.key}`] : [`cn:${parsed.key}`];
+    } else {
+      fullPath = currentTopPath ? [currentTopPath, `plain:${pathMap.size}`] : [`plain:${pathMap.size}`];
+    }
+
+    let parentPath = fullPath.slice(0, -1);
+    while (parentPath.length > 0 && !pathMap.has(parentPath.join("|"))) {
+      parentPath = parentPath.slice(0, -1);
+    }
+
+    const node = topic(parsed.title);
+    appendChild(pathMap.get(parentPath.join("|")), node);
+    pathMap.set(fullPath.join("|"), node);
+  }
+
+  return root.children;
+}
+
+function buildExpectedResultTopics(items, fallbackTitle) {
+  const source = items.length > 0 ? items : [fallbackTitle];
+  const groups = [];
+  let current = [];
+
+  for (const item of source) {
+    if (/^\d+[.)]\s*/.test(item) || /^\d+[）)]\s*/.test(item)) {
+      if (current.length > 0) {
+        groups.push(current.join("\n"));
+      }
+      current = [item];
+    } else if (current.length > 0) {
+      current.push(item);
+    } else {
+      current = [item];
+    }
+  }
+
+  if (current.length > 0) {
+    groups.push(current.join("\n"));
+  }
+
+  return groups.map((group) => topic(group));
+}
+
 function parseMarkdown(markdown) {
   const lines = markdown.split(/\r?\n/);
   const root = {
@@ -80,6 +207,12 @@ function parseMarkdown(markdown) {
   let currentCase = null;
   let currentSection = null;
   let pendingInlineSection = null;
+
+  const isListItem = (text) =>
+    /^[-*]\s+/.test(text) ||
+    /^\d+[.)]\s*/.test(text) ||
+    /^[a-zA-Z]\.\s*/.test(text) ||
+    /^[a-zA-Z](?:-\d+)+(?:-[a-zA-Z])?[.)）]\s*/.test(text);
 
   for (const rawLine of lines) {
     const line = rawLine.trimEnd();
@@ -147,7 +280,7 @@ function parseMarkdown(markdown) {
       currentSection = "steps";
     }
 
-    if (/^[-*]\s+/.test(trimmed) || /^\d+[.)]\s*/.test(trimmed) || /^[a-zA-Z]\.\s*/.test(trimmed)) {
+    if (isListItem(trimmed)) {
       currentCase[currentSection].push(trimmed.replace(/^[-*]\s+/, ""));
     } else if (currentCase[currentSection].length > 0) {
       currentCase[currentSection][currentCase[currentSection].length - 1] += `\n${trimmed}`;
@@ -178,11 +311,10 @@ function buildXmindTree(parsed) {
         topic(
           l3.title,
           l3.children.map((c) => {
-            const stepText = c.steps.join("\n");
-            const expectText = c.expects.join("\n");
+            const stepLines = c.steps.length > 0 ? c.steps.join("\n") : "1.待补测试步骤";
             return topic(c.title, [
-              topic(stepText || "1.待补测试步骤", [
-                topic(expectText || "1.待补预期结果"),
+              topic(stepLines, [
+                ...buildExpectedResultTopics(c.expects, "1.待补预期结果"),
               ]),
             ]);
           })

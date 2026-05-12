@@ -147,10 +147,10 @@ node .codex/skills/maitao-testcase-style/scripts/generate_calendar_xmind.js --ti
 ```
 
 - 该命令会直接生成最小可用的 `.xmind` 包，包含 `content.json`、`metadata.json`、`manifest.json` 三个核心文件。
-- 如果已经先写好了 Markdown 结构稿，再转成真实脑图，可运行：
+- 如果已经先写好了 Markdown 结构稿，再转成真实脑图，可运行；默认建议结构稿放临时目录，`testcases/` 只保留最终 `.xmind`：
 
 ```bash
-node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "testcases/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind"
+node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "/tmp/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind"
 ```
 
 - 结构稿默认采用以下约定：
@@ -163,10 +163,10 @@ node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "t
 - 根节点下的 `- 来源路径`、`- 关联范围` 等说明项，会自动归档到脑图一级节点 `+附注`。
 - `## +待确认` 这类一级模块会完整保留，不会在转换时丢失。
 
-- 如果需要把已有 `.xmind` 反向导出成 Markdown 结构稿，可运行：
+- 如果需要把已有 `.xmind` 反向导出成 Markdown 结构稿，可运行；默认建议导出到临时目录：
 
 ```bash
-node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "testcases/+XXX测试用例.xmind" --output "testcases/XXX（XMind结构版）.md"
+node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "testcases/+XXX测试用例.xmind" --output "/tmp/XXX（XMind结构版）.md"
 ```
 
 - 导出规则：
@@ -181,12 +181,14 @@ node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "t
 
 ```bash
 node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases"
-node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode xmind-to-md --dir "testcases"
+node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode xmind-to-md --dir "/tmp/testcases-md"
 ```
 
 - 批处理规则：
   - `md-to-xmind` 默认只处理文件名含 `结构版` 或 `结构稿` 的 `.md`
+  - `md-to-xmind` 适合“临时结构稿 -> 最终 `.xmind`”流程；`testcases/` 默认只保留最终 `.xmind`
   - `xmind-to-md` 默认跳过文件名含 `-结构稿转换` 的 `.xmind`
+  - `xmind-to-md` 建议输出到临时目录，不要默认回写到 `testcases/`
   - 默认不覆盖已有输出；如需覆盖，显式加 `--overwrite`
 
 - 如果需要校验结构是否合规，可运行：

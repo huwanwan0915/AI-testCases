@@ -27,6 +27,7 @@ Important repo convention:
 - The source directory is intentionally spelled `requirments/`. Do not silently switch to `requirements/`.
 - Unless the user explicitly asks for another format, the default deliverable in this repo is the user's XMind-style testcase output.
 - In this repo, do not create or maintain markdown testcase twins unless the user explicitly asks for markdown.
+- Unless the user explicitly asks to keep intermediate drafts, only the final `.xmind` should be written into `testcases/`; intermediate markdown structure drafts, prototype-alignment drafts, and conversion artifacts should go to a temporary directory.
 
 ## Workflow
 
@@ -90,7 +91,7 @@ Mandatory decomposition process:
 2. list the possible values of each dimension
 3. enumerate all business-meaningful combinations
 4. merge only truly equivalent combinations
-5. write the remaining combinations into testcase expectations using `a.` `b.` `c.` `d.` branches
+5. write the remaining combinations into testcase expectations using `a.` `b.` `c.` `d.` branches under a normal top-level item such as `1. 情况如下` or `2. 显示如下`; if one letter branch needs non-branch descriptive sub-items, write them as `d-1）`, `d-2）`, `c-3-a）`; do not collapse them into mixed numbering like `1.a`, `1-2a`, or `2.d-1`
 
 Typical dimensions:
 
@@ -123,6 +124,7 @@ Default output rules:
 - name the final deliverable as `<项目名称>测试用例.xmind`
 - when the source folder or feature name is Chinese, keep the Chinese project name in the filename
 - do not create a sibling markdown testcase file unless the user explicitly requests one
+- do not leave intermediate `结构稿` / `导出结构稿` / prototype-draft markdown files in `testcases/` unless the user explicitly asks to keep them there
 
 Project name rule:
 
@@ -155,6 +157,7 @@ Quality bar:
 
 - use the screenshot-based XMind structure as the default testcase style for this repo
 - when the user asks for testcase generation in this repo, generate/update a real `.xmind` file in `testcases/` and do not sync a markdown copy unless explicitly requested
+- when temporary markdown drafting is necessary for conversion, store it outside `testcases/` by default and keep only the final `.xmind` in `testcases/`
 - use page structure as the primary organizing principle: `页面 -> 页面区域/元素 -> 场景/用例`; business rules are secondary and should be attached to the relevant page node
 - each case must be testable and have a clear scenario boundary
 - preconditions must be embedded into `测试步骤`; do not keep a separate `前置条件` column unless the user explicitly asks for that schema
@@ -195,11 +198,9 @@ Quality bar:
 - Prefer concise but complete testcase titles that describe one scenario.
 - When the user prefers `按模块写到一个用例case中`, treat one visible module as one integrated testcase first, and put the state matrix into the expected-result node instead of exploding it into many tiny testcase siblings.
 - For integrated module testcases, use this default order inside `预期结果`:
-  1. 页面元素有哪些
-  2. 默认展示/默认选中是什么
-  3. 切换交互后怎么变化
-  4. a/b/c/d 条件分支怎么显示
-  5. 异常/空态/边界怎么反馈
+  - plain sequential content can use `1.` `2.` `3.`
+  - branch content should keep a normal top-level item such as `1. 情况如下` or `2. 显示如下`, and the actual branches below it should be written directly as `a.` `b.` `c.` `d.`
+  - a typical branch order is: 页面元素有哪些 -> 默认展示/默认选中是什么 -> 切换交互后怎么变化 -> 条件分支怎么显示 -> 异常/空态/边界怎么反馈
 - For integrated, UI-dense modules, capture both element inventory and key interaction/state changes in the same testcase when that reads more clearly.
 - If a label, badge, button state, or field visibility depends on multiple conditions, enumerate all meaningful combinations with `a.` `b.` `c.` `d.` rather than writing one vague sentence.
 - If the requirement uses conditional wording such as `若`、`仅当`、`否则`、`同时`、`只作为`、`不参与`、`回退到`, treat it as a strong signal that you must enumerate the branch matrix explicitly.
@@ -227,7 +228,7 @@ Quality bar:
   - `只抄需求不转测试`: the output repeats requirement prose but does not convert it into observable steps and expected results
   - `只写正常流`: the case covers only the happy path and omits empty state, abnormal feedback, blocked actions, or return path
 - In this repo's XMind style, second-level nodes usually use `+页面/模块名`, third-level nodes use `+功能节点`, and testcase nodes usually do not need a `+`.
-- For real `.xmind` output, do not create standalone nodes named `测试步骤` or `预期结果`; place the numbered step text directly in one child node and place the numbered expected-result text directly in its child node, matching the screenshot sample.
+- For real `.xmind` output, default to the concise testcase hierarchy `用例名称 -> 步骤内容节点 -> 预期结果内容节点`; do not add standalone `测试步骤` or `预期结果` label nodes unless the user explicitly asks for them.
 - For real `.xmind` output in this repo, prefer canvas-level settings aligned to the screenshot sample: `画布=逻辑图`, `配色方案=晨曦`, `彩虹分支=开启`, `同级主题对齐=开启`.
 - When reorganizing a testcase set into XMind style, prefer grouping by page, then by visible page area or element in top-to-bottom order, then by testcase.
 - If the screenshot sample splits one rule into multiple sibling cases by trigger timing or entry state, preserve that split in the generated output.

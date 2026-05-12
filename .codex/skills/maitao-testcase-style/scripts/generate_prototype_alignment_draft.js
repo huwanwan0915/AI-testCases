@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
 const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.length === 0) {
@@ -36,7 +40,7 @@ function printHelp() {
 
 Examples:
   node scripts/generate_prototype_alignment_draft.js --page "产品详情页" --section "价格横幅" --section "价格说明弹层"
-  node scripts/generate_prototype_alignment_draft.js --page "日历弹窗" --section "团期卡片" --section "底部按钮" --output "testcases/日历弹窗-原型落位草稿.md"
+  node scripts/generate_prototype_alignment_draft.js --page "日历弹窗" --section "团期卡片" --section "底部按钮" --output "/tmp/日历弹窗-原型落位草稿.md"
 `);
 }
 
@@ -89,10 +93,9 @@ function buildDraft() {
 }
 
 const draft = buildDraft();
+const outputPath = output
+  ? path.resolve(output)
+  : path.join(os.tmpdir(), `${page}-原型落位草稿.md`);
 
-if (output) {
-  require("fs").writeFileSync(require("path").resolve(output), `${draft}\n`, "utf8");
-  console.log(require("path").resolve(output));
-} else {
-  console.log(draft);
-}
+fs.writeFileSync(outputPath, `${draft}\n`, "utf8");
+console.log(outputPath);

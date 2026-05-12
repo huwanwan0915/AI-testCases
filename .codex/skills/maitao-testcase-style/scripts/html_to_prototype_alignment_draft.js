@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const args = process.argv.slice(2);
@@ -38,7 +39,7 @@ function printHelp() {
   node scripts/html_to_prototype_alignment_draft.js --input "<html-path>" [--output "<md-path>"] [--max-sections 12]
 
 Example:
-  node scripts/html_to_prototype_alignment_draft.js --input "requirments/日历改造/产品详情.html" --output "testcases/产品详情-原型落位草稿.md"
+  node scripts/html_to_prototype_alignment_draft.js --input "requirments/日历改造/产品详情.html"
 `);
 }
 
@@ -204,11 +205,9 @@ const html = fs.readFileSync(inputPath, "utf8");
 const pageTitle = stripTags((html.match(/<title>(.*?)<\/title>/i) || [])[1] || path.basename(inputPath, ".html"));
 const sections = mergeSections(pageTitle, extractCandidates(html));
 const draft = buildDraft(pageTitle, sections, inputPath);
+const outputPath = output
+  ? path.resolve(output)
+  : path.join(os.tmpdir(), `${pageTitle}-原型落位草稿.md`);
 
-if (output) {
-  const outputPath = path.resolve(output);
-  fs.writeFileSync(outputPath, `${draft}\n`, "utf8");
-  console.log(outputPath);
-} else {
-  console.log(draft);
-}
+fs.writeFileSync(outputPath, `${draft}\n`, "utf8");
+console.log(outputPath);

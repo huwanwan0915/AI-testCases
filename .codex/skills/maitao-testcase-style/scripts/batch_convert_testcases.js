@@ -39,7 +39,7 @@ function printHelp() {
 
 Examples:
   node scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases"
-  node scripts/batch_convert_testcases.js --mode xmind-to-md --dir "testcases" --overwrite
+  node scripts/batch_convert_testcases.js --mode xmind-to-md --dir "/tmp/testcases-md" --overwrite
 `);
 }
 

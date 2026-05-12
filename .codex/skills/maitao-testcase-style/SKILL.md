@@ -15,14 +15,14 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 
 ## 默认交付格式
 1. 默认最终交付物是 `testcases/` 下的真实 `.xmind` 文件，不是表格，也不是普通 Markdown。
-2. 除非用户明确要求查看 Markdown 草稿，否则不要创建、更新、同步任何 `.md` 测试用例文件。
+2. 除非用户明确要求查看或保留 Markdown 草稿，否则不要在 `testcases/` 创建、更新、同步任何 `.md` 测试用例文件；中间结构稿、原型落位草稿默认放临时目录。
 3. XMind 默认结构为：`根节点 -> +页面/模块节点 -> +功能节点 -> 用例节点 -> 步骤内容节点 -> 预期结果内容节点`。
-4. 真实 `.xmind` 中，不额外创建名为“测试步骤”或“预期结果”的独立节点，直接把编号文本写入对应子节点。
+4. 默认不要额外创建名为 `测试步骤` 或 `预期结果` 的中间节点，直接把编号文本写入对应内容节点。
 5. 画布默认沿用仓库既有风格：`逻辑图`、`晨曦`、`彩虹分支开启`、`同级主题对齐开启`。
 
 ## 写作流程
 1. **收集信息**：优先打开 `testcases/+麦淘旅行家测试用例（落地页）.xmind` 对齐节点层级和颗粒度；需要检索具体文案时，再用 `rg "模块名" testcases/+麦淘旅行家测试用例（落地页）.md` 定位对应内容；必要时同步查阅其它需求文件。
-2. **先对原型落位**：如果需求包含原型图、Axure 导出页、页面截图、HTML 原型页，必须先按页面从上到下拆出真实页面区域，再把每条文字描述挂到对应区域下面；未完成“原型区域 -> 文字规则 -> 用例节点”一一对应前，不要先写 case。
+2. **先对原型落位**：如果需求包含原型图、Axure 导出页、页面截图、HTML 原型页，必须先按页面从上到下拆出真实页面区域，再把每条文字描述挂到对应区域下面；未完成“原型区域 -> 文字规则 -> 用例节点”一一对应前，不要先写 case。若需中间草稿，默认放临时目录，不留在 `testcases/`。
 3. **回查历史知识库/关联需求**：拆完当前需求后，默认主动回查知识库和历史同类需求，判断是否存在可复用的旧规则、旧分支、旧埋点拆法；不要只盯当前文档单独写。
 4. **划分模块**：先按页面元素和页面区域搭骨架，再按页面从上到下顺序列出模块与子节点，确认是否需要新增二级或三级标题。
 5. **确定交付形态**：默认直接按 XMind 节点组织并产出 `.xmind` 文件，不再同步 Markdown 版本。
@@ -30,7 +30,7 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 7. **挂载规则**：把需求描述里的展示规则、交互规则、状态规则、异常规则，放到它实际发生的页面元素下面，不单独抽成脱离页面的规则模块。
 8. **先拆排列组合**：遇到需求文档中的条件判断、展示分支、价格类型、人数类型、按钮状态、字段显隐、库存状态、权限状态、时间状态等规则，先把“影响结果的维度”全部列出，再做排列组合，筛出业务上有意义的全量分支。
 9. **展开步骤**：写清楚入口、前置条件、操作路径，必要时拆分不同端或账号态；若一个 case 覆盖多个分支，步骤中要写明需准备哪些组合数据。
-10. **描述预期**：先写页面元素，再写默认展示，再写切换交互，再写异常/边界；对排列组合后的多分支情况，使用 `a.` `b.` `c.` `d.` 分项罗列，不得只写“按规则显示”。
+10. **描述预期**：先写页面元素，再写默认展示，再写切换交互，再写异常/边界；对排列组合后的多分支情况，顶层提示语句仍保留 `1.` `2.` `3.` 这类顺序编号，若该条下面有真正分支，再在下一层直接接 `a.` `b.` `c.` `d.` 分项罗列；若某个字母分支下还要继续补充非分支描述子项，则写成 `d-1）`、`d-2）`、`c-3-a）` 这类形式。不得写成 `1.a.`、`1-2a.`、`2.d-1.` 这类混合编号，也不得只写“按规则显示”。
 11. **主动补交互**：如果页面里有 Tab、品类标签、线路/套餐、筛选、展开收起、关闭重开、登录跳转、底部栏联动，默认都要考虑是否写进同一个 case。
 12. **串联编号**：客户端用例编号沿用 `PK-C-xxx`，埋点 `PK-A-xxx`，后台 `PK-B-xxx`，放在 `###` 标题或预期首条。
 13. **互锁校验**：逐条比对原需求，确保没有漏掉模块/子条件；如需求含“见用例《xxx》”需补充跳转链接或引用说明。
@@ -38,17 +38,16 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 ## 原型对齐强制规则
 - 只要需求包含原型图、页面截图、Axure 导出 HTML、交互稿、标注图，就必须先做“原型落位”，再写用例。
 - 需要落地执行时，优先打开 `references/prototype-alignment-template.md`，先按模板完成原型区域拆分和文字挂载，再写正式 case。
-- 需要先快速起一份“原型落位草稿”时，可运行：
+- 需要先快速起一份“原型落位草稿”时，可运行；若未显式传 `--output`，草稿默认写到系统临时目录：
 
 ```bash
 node .codex/skills/maitao-testcase-style/scripts/generate_prototype_alignment_draft.js --page "产品详情页" --section "价格横幅" --section "价格说明弹层"
 ```
 
-- 如果已有 Axure/HTML 原型页，想先自动抽一版候选区域，再人工整理，可运行：
-- 如果已有 Axure/HTML 原型页，想先自动起一版“页面区域骨架 + 候选补充”，再人工整理，可运行：
+- 如果已有 Axure/HTML 原型页，想先自动起一版“页面区域骨架 + 候选补充”，再人工整理，可运行；若未显式传 `--output`，草稿默认写到系统临时目录：
 
 ```bash
-node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_draft.js --input "requirments/日历改造/产品详情.html" --output "testcases/产品详情-原型落位草稿.md"
+node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_draft.js --input "requirments/日历改造/产品详情.html"
 ```
 
 - `html_to_prototype_alignment_draft.js` 的定位是“自动初始化草稿”，不是自动产出最终落位结果：
@@ -99,7 +98,7 @@ node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_dra
 - 预期里优先使用 `显示如下：`、`情况如下：`、`点击后如下：`、`切换后如下：`。
 - 避免使用 `按规则显示`、`正常展示`、`符合需求`、`逻辑正确` 这类总结句。
 - 分支句子要直接落到最终页面展示，不要停在“取最低价场次显示该场次价格”这种半截句。
-- 同一模块下编号节奏尽量统一：大层优先 `1. 2. 3.`，同层分支优先 `a. b. c.`；只有需要强贴用户原稿时，再使用 `1） 2）` 或 `1-a-1）`。
+- 同一模块下编号节奏尽量统一：普通顺序内容可用 `1. 2. 3.`；顶层编号下的真正分支用 `a. b. c.`；若分支下继续补充说明型子项，用 `d-1）`、`d-2）`、`c-3-a）` 这类写法；不要写成 `1.a.`、`1-2a.`、`2.d-1.`。只有需要强贴用户原稿且用户原稿本身就是该格式时，才保留 `1） 2）` 这类纯顺序子项。
 
 ## 埋点 case 细则
 - 纯埋点 case 默认贴用户原稿写法：步骤只写入口和点击动作，预期直接写 `记神策事件 XXX，button_name：YYY`。
@@ -145,14 +144,14 @@ node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_dra
       2.执行操作...
         1.显示元素A/B/C
         2.默认态如下：
-          a....
-          b....
+        a....
+        b....
         3.切换/点击后如下：
-          a....
-          b....
+        a....
+        b....
         4.异常/边界如下：
-          a....
-          b....
+        a....
+        b....
 ```
 
 - 如果是纯埋点 case，优先写成“操作路径 + 事件结果”两层，不补多余 UI 细节，避免和前端 case 重复。
@@ -169,16 +168,16 @@ node .codex/skills/maitao-testcase-style/scripts/generate_calendar_skeleton.js -
 node .codex/skills/maitao-testcase-style/scripts/generate_calendar_xmind.js --title "+XXX测试用例" --output "testcases/+XXX测试用例.xmind"
 ```
 
-- 如果已经先写好了 Markdown 结构稿，再转成真实 `.xmind`，可运行：
+- 如果已经先写好了 Markdown 结构稿，再转成真实 `.xmind`，可运行；默认建议结构稿放临时目录，`testcases/` 只保留最终 `.xmind`：
 
 ```bash
-node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "testcases/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind"
+node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "/tmp/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind"
 ```
 
-- 如果需要把现有 `.xmind` 反向导出成 Markdown 结构稿，可运行：
+- 如果需要把现有 `.xmind` 反向导出成 Markdown 结构稿，可运行；默认建议导出到临时目录，除非用户明确要求保留：
 
 ```bash
-node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "testcases/+XXX测试用例.xmind" --output "testcases/XXX（XMind结构版）.md"
+node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "testcases/+XXX测试用例.xmind" --output "/tmp/XXX（XMind结构版）.md"
 ```
 
 - 如果需要批量处理 `testcases/` 目录，可运行：
@@ -223,13 +222,15 @@ node .codex/skills/maitao-testcase-style/scripts/batch_validate_testcases.js --d
 
 ## 文本风格
 - 中文标点优先，保持“，”“：”“（）”等写法。
-- 数字或字母编号与原文一致（`1-d-1）` 等结构不要改写）。
+- 数字或字母编号需遵循当前风格规则：顶层顺序项用 `1.` `2.` `3.`，真正分支用 `a.` `b.` `c.`，分支下的描述型子项用 `d-1）`、`c-3-a）`；不要写成 `1.a.`、`1-2a.`、`2.d-1.` 这类混合编号。
 - 语气保持客观陈述，例如“显示”“提示”“进入”。
 - 涉及金额、时间、链接，要抄原文，不自行推测。
 - 涉及仓库通用业务口径，例如 `预订产品价格设置`、起价匹配、日期价格展示等，沿用 `requirements-testcase-writer` 中定义的默认业务解释；本技能不重复定义业务规则。
 - 默认不要先按抽象功能点或规则点分组；优先写成“页面区域/元素 -> 场景”。
 - 模块命名贴近页面真实元素，例如 `头图`、`悬浮按钮`、`弹窗`、`列表`、`卡片`、`底部栏`，避免泛化命名如 `规则校验`、`功能模块`、`列表逻辑`。
 - 如果用户偏好“大 case”，优先把一个模块内的显示逻辑、切换交互、边界情况收敛到同一个 `###` 用例标题下，再在预期里用 `a.` `b.` `c.` `d.` 展开。
+- 若一个预期节点已经使用 `a.` `b.` `c.` `d.` 枚举分支，则应写成 `1. 默认态如下：` 下一层接 `a...`、`b...`；不要写成 `1.a...`、`1-2a...` 这种混合编号。
+- 若某个字母分支下还需继续补充非分支描述项，则写成 `d-1）...`、`d-2）...`、`c-3-a）...`，不要再在前面补顶层数字，也不要把它误写成新的 `a.` `b.` `c.` 分支。
 - 对标签、角标、按钮状态、字段显隐这类多条件逻辑，不要只写一句“按规则显示”，要把关键组合列出来。
 - 写卡片、弹窗、表格、底部栏时，默认先检查是否遗漏页面元素描写，例如头图、标题、标签、评分、价格、按钮、关闭按钮、已选态、空态按钮。
 - 对日历/团期类模块，默认优先把状态文案直接写全，例如 `报名中`、`仅余N人/份/车/房间`、`余位通知`、`已满员`、`确定成行`、`距开售还剩 D天hh:mm:ss`，不要只保留状态名称。

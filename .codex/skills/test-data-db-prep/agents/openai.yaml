@@ -1,0 +1,8 @@
+interface:
+  display_name: "DB Test Data Prep"
+  short_description: "Prepare non-prod QA data by SQL"
+  default_prompt: "Use $test-data-db-prep to prepare or clean non-production database test data with safe lookup, write, verification, and cleanup steps."
+
+policy:
+  allow_implicit_invocation: true
+

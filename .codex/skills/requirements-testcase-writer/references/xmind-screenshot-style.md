@@ -8,7 +8,7 @@ Use it whenever future testcase output should follow the same XMind structure an
 
 - Default deliverable: real `.xmind` file.
 - Do not fall back to table-style testcase output.
-- Do not create explicit topic labels named `测试步骤` or `预期结果` in the final `.xmind`.
+- Do not create explicit topic labels named `测试步骤` or `预期结果` in the final `.xmind` unless the user explicitly asks for them.
 - The actual visual node chain should be:
   - root topic
   - `+页面/模块`
