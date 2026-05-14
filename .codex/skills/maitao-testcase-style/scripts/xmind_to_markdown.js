@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+// This reverse-export script is used with:
+// ../references/testcase-hard-checklist.md
+// Reverse-exported markdown drafts should still be reviewed against
+// the shared numbering and Coding-import hierarchy rules before reuse.
+
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
@@ -33,6 +38,13 @@ if (!input || !output) {
 function printHelp() {
   console.log(`Usage:
   node scripts/xmind_to_markdown.js --input "<xmind-path>" --output "<markdown-path>"
+
+This script works with:
+  ../references/testcase-hard-checklist.md
+
+Reminder:
+  - Reverse-export is only a structure draft
+  - Reuse it only after checking numbering, branch judgment, and final Coding import hierarchy
 
 Output markdown structure:
   # 根节点

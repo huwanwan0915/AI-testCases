@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+// This converter follows:
+// ../references/testcase-hard-checklist.md
+// Especially for:
+// - branch numbering vs fixed descriptive numbering
+// - Coding import hierarchy: 用例名称 -> 测试步骤 -> 预期结果
+// - keeping 预期结果 as a leaf node in the final XMind import structure
+
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -14,6 +21,7 @@ if (args.includes("--help") || args.length === 0) {
 
 let input = "";
 let output = "";
+let codingImport = false;
 
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i];
@@ -23,6 +31,8 @@ for (let i = 0; i < args.length; i += 1) {
   } else if (arg === "--output" && args[i + 1]) {
     output = args[i + 1];
     i += 1;
+  } else if (arg === "--coding-import") {
+    codingImport = true;
   }
 }
 
@@ -33,7 +43,17 @@ if (!input || !output) {
 
 function printHelp() {
   console.log(`Usage:
-  node scripts/markdown_to_xmind.js --input "<markdown-path>" --output "<xmind-path>"
+  node scripts/markdown_to_xmind.js --input "<markdown-path>" --output "<xmind-path>" [--coding-import]
+
+This script follows:
+  ../references/testcase-hard-checklist.md
+
+Important:
+  - Fixed descriptive lists use 1） 2） 3）
+  - Real condition/result branches use a. b. c.
+  - For Coding import, keep hierarchy as 用例名称 -> 测试步骤 -> 预期结果
+  - For Coding import, keep 预期结果 as a leaf node and write numbered content into that node body
+  - Use --coding-import to force all expected-result content into one leaf node body per case
 
 Expected markdown structure:
   # 根节点
@@ -69,15 +89,14 @@ function topic(title, children = [], extra = {}) {
 
 function parseListPrefix(item) {
   const normalized = item.replace(/\r/g, "");
-  const [firstLine, ...restLines] = normalized.split("\n");
-  const restText = restLines.length > 0 ? `\n${restLines.join("\n")}` : "";
+  const [firstLine] = normalized.split("\n");
 
   let match = firstLine.match(/^(\d+)[.)]\s*(.*)$/);
   if (match) {
     return {
       type: "topNumber",
       path: [`top:${match[1]}`],
-      title: `${match[1]}. ${match[2]}`.trimEnd() + restText,
+      title: normalized,
     };
   }
 
@@ -86,7 +105,7 @@ function parseListPrefix(item) {
     return {
       type: "letterBranch",
       branchKey: match[1].toLowerCase(),
-      title: `${match[1]}. ${match[2]}`.trimEnd() + restText,
+      title: normalized,
     };
   }
 
@@ -102,7 +121,7 @@ function parseListPrefix(item) {
       type: "branchDetail",
       branchKey: segments[0],
       path,
-      title: `${match[1]}）${match[2] ? match[2] : ""}`.trimEnd() + restText,
+      title: normalized,
     };
   }
 
@@ -111,87 +130,49 @@ function parseListPrefix(item) {
     return {
       type: "cnNumber",
       key: match[1],
-      title: `${match[1]}）${match[2] ? match[2] : ""}`.trimEnd() + restText,
+      title: normalized,
     };
   }
 
   return {
     type: "plain",
-    title: item,
+    title: normalized,
   };
 }
 
 function buildListTopics(items, fallbackTitle) {
-  const root = { children: [] };
-  const pathMap = new Map([["", root]]);
-  let currentTopPath = "";
-  const appendChild = (parent, child) => {
-    if (Array.isArray(parent.children)) {
-      parent.children.push(child);
-      return;
-    }
-    if (!parent.children) {
-      parent.children = { attached: [] };
-    }
-    if (!Array.isArray(parent.children.attached)) {
-      parent.children.attached = [];
-    }
-    parent.children.attached.push(child);
-  };
-
-  for (const item of items.length > 0 ? items : [fallbackTitle]) {
-    const parsed = parseListPrefix(item);
-    let fullPath = [];
-
-    if (parsed.type === "topNumber") {
-      fullPath = parsed.path;
-      currentTopPath = fullPath[0];
-    } else if (parsed.type === "letterBranch") {
-      fullPath = currentTopPath ? [currentTopPath, `branch:${parsed.branchKey}`] : [`branch:${parsed.branchKey}`];
-    } else if (parsed.type === "branchDetail") {
-      fullPath = currentTopPath ? [currentTopPath, `branch:${parsed.branchKey}`, ...parsed.path] : [`branch:${parsed.branchKey}`, ...parsed.path];
-    } else if (parsed.type === "cnNumber") {
-      fullPath = currentTopPath ? [currentTopPath, `cn:${parsed.key}`] : [`cn:${parsed.key}`];
-    } else {
-      fullPath = currentTopPath ? [currentTopPath, `plain:${pathMap.size}`] : [`plain:${pathMap.size}`];
-    }
-
-    let parentPath = fullPath.slice(0, -1);
-    while (parentPath.length > 0 && !pathMap.has(parentPath.join("|"))) {
-      parentPath = parentPath.slice(0, -1);
-    }
-
-    const node = topic(parsed.title);
-    appendChild(pathMap.get(parentPath.join("|")), node);
-    pathMap.set(fullPath.join("|"), node);
-  }
-
-  return root.children;
-}
-
-function buildExpectedResultTopics(items, fallbackTitle) {
-  const source = items.length > 0 ? items : [fallbackTitle];
+  const sourceItems = items.length > 0 ? items : [fallbackTitle];
   const groups = [];
   let current = [];
 
-  for (const item of source) {
-    if (/^\d+[.)]\s*/.test(item) || /^\d+[）)]\s*/.test(item)) {
+  for (const item of sourceItems) {
+    const parsed = parseListPrefix(item);
+    if (parsed.type === "topNumber") {
       if (current.length > 0) {
         groups.push(current.join("\n"));
       }
-      current = [item];
-    } else if (current.length > 0) {
-      current.push(item);
-    } else {
-      current = [item];
+      current = [parsed.title];
+      continue;
     }
+
+    if (current.length === 0) {
+      current = [parsed.title];
+      continue;
+    }
+
+    current.push(parsed.title);
   }
 
   if (current.length > 0) {
     groups.push(current.join("\n"));
   }
 
-  return groups.map((group) => topic(group));
+  return groups.map((text) => topic(text));
+}
+
+function buildLeafText(items, fallbackTitle) {
+  const sourceItems = items.length > 0 ? items : [fallbackTitle];
+  return sourceItems.join("\n");
 }
 
 function parseMarkdown(markdown) {
@@ -312,10 +293,11 @@ function buildXmindTree(parsed) {
           l3.title,
           l3.children.map((c) => {
             const stepLines = c.steps.length > 0 ? c.steps.join("\n") : "1.待补测试步骤";
+            const expectTopics = codingImport
+              ? [topic(buildLeafText(c.expects, "1.待补预期结果"))]
+              : buildListTopics(c.expects, "1.待补预期结果");
             return topic(c.title, [
-              topic(stepLines, [
-                ...buildExpectedResultTopics(c.expects, "1.待补预期结果"),
-              ]),
+              topic(stepLines, expectTopics),
             ]);
           })
         )

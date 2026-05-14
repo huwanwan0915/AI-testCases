@@ -5,6 +5,10 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 
 # 麦淘内部测试用例风格指南（XMind优先）
 
+## 写前 10 条硬检查
+- 优先先读 `references/testcase-hard-checklist.md`，这是本仓库所有测试用例通用的硬规则。
+- 若当前任务和页面模块归属、case 收拆、编号节奏、Coding 入库层级有关，默认按该清单先自检，再开始写用例。
+
 ## 使用时机
 - 当用户要求“按照我的风格”“按照麦淘旅行家用例风格”“按脑图/XMind风格”编写或更新测试用例时。
 - 当需求文档来自 `requirments/+麦淘旅行家测试用例（落地页）.md`、同风格脑图导出稿，或仓库内已有同风格 testcase 文件时。
@@ -19,6 +23,9 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 3. XMind 默认结构为：`根节点 -> +页面/模块节点 -> +功能节点 -> 用例节点 -> 步骤内容节点 -> 预期结果内容节点`。
 4. 默认不要额外创建名为 `测试步骤` 或 `预期结果` 的中间节点，直接把编号文本写入对应内容节点。
 5. 画布默认沿用仓库既有风格：`逻辑图`、`晨曦`、`彩虹分支开启`、`同级主题对齐开启`。
+6. 如果最终 XMind 需要上传到 Coding 用例库，默认按 Coding 可识别层级输出：`用例名称 -> 测试步骤 -> 预期结果`；不要在这三层之间再插入额外说明节点。
+7. 若最终 XMind 需要上传到 Coding 用例库，`预期结果` 必须是叶子节点；`1）2）3）`、`a. b. c.`、`b-1）` 这类内容都直接写在该结果节点正文里，不要在 `预期结果` 后继续拆新节点。
+8. 若用户只要最终落地的一个 XMind 文件，所有结构稿、返工稿、反导稿都默认放 `/tmp` 或系统临时目录，不保留在 `testcases/`。
 
 ## 写作流程
 1. **收集信息**：优先打开 `testcases/+麦淘旅行家测试用例（落地页）.xmind` 对齐节点层级和颗粒度；需要检索具体文案时，再用 `rg "模块名" testcases/+麦淘旅行家测试用例（落地页）.md` 定位对应内容；必要时同步查阅其它需求文件。
@@ -26,7 +33,7 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 3. **回查历史知识库/关联需求**：拆完当前需求后，默认主动回查知识库和历史同类需求，判断是否存在可复用的旧规则、旧分支、旧埋点拆法；不要只盯当前文档单独写。
 4. **划分模块**：先按页面元素和页面区域搭骨架，再按页面从上到下顺序列出模块与子节点，确认是否需要新增二级或三级标题。
 5. **确定交付形态**：默认直接按 XMind 节点组织并产出 `.xmind` 文件，不再同步 Markdown 版本。
-6. **确定 case 粒度**：默认先尝试“一个页面模块写成一个完整 case”；只有当模块内部场景明显独立、且拆开更清楚时，才拆成多个 sibling case。
+6. **确定 case 粒度**：默认先尝试“一个页面模块写成一个完整 case”；只有当模块内部场景明显独立、且拆开更清楚时，才拆成多个 sibling case；不要为了凑“大 case”而把几个独立交互目标硬合并。
 7. **挂载规则**：把需求描述里的展示规则、交互规则、状态规则、异常规则，放到它实际发生的页面元素下面，不单独抽成脱离页面的规则模块。
 8. **先拆排列组合**：遇到需求文档中的条件判断、展示分支、价格类型、人数类型、按钮状态、字段显隐、库存状态、权限状态、时间状态等规则，先把“影响结果的维度”全部列出，再做排列组合，筛出业务上有意义的全量分支。
 9. **展开步骤**：写清楚入口、前置条件、操作路径，必要时拆分不同端或账号态；若一个 case 覆盖多个分支，步骤中要写明需准备哪些组合数据。
@@ -34,6 +41,7 @@ description: "Follow the user's 麦淘内部测试用例 style when writing or r
 11. **主动补交互**：如果页面里有 Tab、品类标签、线路/套餐、筛选、展开收起、关闭重开、登录跳转、底部栏联动，默认都要考虑是否写进同一个 case。
 12. **串联编号**：客户端用例编号沿用 `PK-C-xxx`，埋点 `PK-A-xxx`，后台 `PK-B-xxx`，放在 `###` 标题或预期首条。
 13. **互锁校验**：逐条比对原需求，确保没有漏掉模块/子条件；如需求含“见用例《xxx》”需补充跳转链接或引用说明。
+14. **生成后复核层级**：生成 `.xmind` 后，默认再校验一次最终成品层级，不只校验 Markdown 结构稿；确认成品仍符合 `用例名称 -> 测试步骤 -> 预期结果` 的入库结构。
 
 ## 原型对齐强制规则
 - 只要需求包含原型图、页面截图、Axure 导出 HTML、交互稿、标注图，就必须先做“原型落位”，再写用例。
@@ -92,6 +100,9 @@ node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_dra
 - 若用户反馈“你写的和我写的差很多”，默认不要整份重写，按顺序返工：先校正模块骨架，再补漏分支，再把总结句改成页面结果，再调整 case 收拆，最后统一文风。
 - 默认每一轮返工只改一类问题，不同时大改结构、大改文风、大改编号。
 - 若用户原稿已经把某一块写成一个大 case，默认先保留大 case，再在预期下补分支；若用户原稿把埋点拆成“一条事件一个 case”，不要再合并。
+- 若用户指出的是“层级挂错了”“这个内容应该挂到哪个模块下面”，优先修正模块归属，不要先改写 case 内容。
+- 若某个页面模块名里混挂了两个或更多独立区域，例如“结论与详情”“分享与分享结果页基础展示”，默认拆成多个 sibling 模块，不要继续并挂在一个标题下。
+- 卡片内的字段、标签、套餐、线路、按钮等，默认先判断它是不是该卡片的组成元素；若是，挂回该卡片模块下，不单独漂成并列模块。
 
 ## 标题与文风细则
 - case 标题默认写成“查看/点击/切换 + 页面区域”，少用“模块名 + 逻辑名”。
@@ -99,6 +110,14 @@ node .codex/skills/maitao-testcase-style/scripts/html_to_prototype_alignment_dra
 - 避免使用 `按规则显示`、`正常展示`、`符合需求`、`逻辑正确` 这类总结句。
 - 分支句子要直接落到最终页面展示，不要停在“取最低价场次显示该场次价格”这种半截句。
 - 同一模块下编号节奏尽量统一：普通顺序内容可用 `1. 2. 3.`；顶层编号下的真正分支用 `a. b. c.`；若分支下继续补充说明型子项，用 `d-1）`、`d-2）`、`c-3-a）` 这类写法；不要写成 `1.a.`、`1-2a.`、`2.d-1.`。只有需要强贴用户原稿且用户原稿本身就是该格式时，才保留 `1） 2）` 这类纯顺序子项。
+- 若某个顶层预期标题下先列“页面元素清单 / 固定展示项 / 固定交互项 / 固定输入项 / 非分支描述项”，该层都直接用 `1） 2） 3）`；只有进入真正的场景差异、条件差异、结果差异时，才切到 `a. b. c.` 分支，不要把展示清单、交互清单、输入清单误写成分支结构。
+- 判断是否属于分支结构，不看句式长短，只看是否存在“条件不同 -> 结果不同”的枚举。像“当前浏览/非当前浏览”“有评价/无评价”“有销量/无销量”“单线路/多线路”“H5/小程序/App”这类都属于分支结构，统一用 `a. b. c.`；不要因为它们写在同一个标题下，就误改成 `1） 2） 3）`。
+- 若某一条里同时并列列出多个不同条件对象，且每个对象对应同类但独立的结果，也按分支结构处理，例如“团购产品/卡预约产品/隐藏产品/不可售产品不展示”“点赞/点踩/更多对比维度筛选结果不同”“存在数据/无数据/切换条件后结果不同”这类，都应拆成 `a. b. c.`，不要压成一个 `2）...、...、...` 句子。
+- 若某一条里写的是“映射关系 / 归类关系 / 对应关系”，只要对象不同且对应结果不同，也按分支结构处理，例如“国内长途游/境外游/国内短途游/多日营分别归入哪个品类”“不同维度项分别映射到哪个字段”，都应拆成 `a. b. c.`，不要压成一个 `3）映射关系为：...，...，...` 句子。
+- 若一个结果块下先有固定说明，再进入状态差异，写法应是：固定说明继续用 `1） 2） 3）`，状态差异另起一条 `2. 状态如下：` 或 `3. 情况如下：`，其下再写 `a. b. c.`；不要把固定说明和状态差异混在同一层纯顺序编号里。
+- 如果一个标题下先是分支结构，随后某个分支内部还要补固定元素或固定交互清单，就写成 `b-1）`、`b-2）`、`c-3-a）`，不要把整个标题都压成 `1）2）3）`，也不要把分支里的固定清单继续误写成新的 `a. b. c.` 并列分支。
+- 上述编号判断不是 `线路PK` 特例，而是本仓库所有测试用例默认通用规则；除非用户明确给出另一套编号样式并要求强贴原稿，否则统一按这套判定。
+- 若一个 case 的 `预期结果` 本身包含多个并列一级结果块，例如 `1. 品类标签如下` 与 `2. 空态如下`，语义上仍应保留多个一级结果块；但当最终成品要给 Coding 入库时，这些一级结果块需要合并写入同一个 `预期结果` 叶子节点正文，不能在 `预期结果` 后继续展开新层级。
 
 ## 埋点 case 细则
 - 纯埋点 case 默认贴用户原稿写法：步骤只写入口和点击动作，预期直接写 `记神策事件 XXX，button_name：YYY`。
@@ -174,6 +193,12 @@ node .codex/skills/maitao-testcase-style/scripts/generate_calendar_xmind.js --ti
 node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "/tmp/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind"
 ```
 
+- 若最终 `.xmind` 需要直接上传 Coding，用 `--coding-import` 强制输出为 Coding 可识别的最小叶子层级：
+
+```bash
+node .codex/skills/maitao-testcase-style/scripts/markdown_to_xmind.js --input "/tmp/XXX（XMind结构版）.md" --output "testcases/+XXX测试用例.xmind" --coding-import
+```
+
 - 如果需要把现有 `.xmind` 反向导出成 Markdown 结构稿，可运行；默认建议导出到临时目录，除非用户明确要求保留：
 
 ```bash
@@ -185,6 +210,12 @@ node .codex/skills/maitao-testcase-style/scripts/xmind_to_markdown.js --input "t
 ```bash
 node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases"
 node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode xmind-to-md --dir "testcases"
+```
+
+- 若是批量生成给 Coding 入库的最终脑图，可批量透传 `--coding-import`：
+
+```bash
+node .codex/skills/maitao-testcase-style/scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases" --coding-import
 ```
 
 - 可选参数：
@@ -202,6 +233,8 @@ node .codex/skills/maitao-testcase-style/scripts/validate_testcase_structure.js 
 ```bash
 node .codex/skills/maitao-testcase-style/scripts/batch_validate_testcases.js --dir "testcases"
 ```
+
+- 若批量校验时重点关注 Coding 入库结构，可留意输出里的 `coding_leaf_issues` 与每个文件的 `coding_leaf_issue_count`，用于快速发现“预期结果后又挂子节点”的问题。
 
 - 常用裁剪参数：
   - `--no-resource`：去掉 `+选择资源页`
@@ -262,17 +295,23 @@ node .codex/skills/maitao-testcase-style/scripts/batch_validate_testcases.js --d
   - 同一模块内存在几个明显独立的交互目标
   - 某个分支需要完全不同的入口、数据准备或预期结构
   - 用户明确要求更细颗粒度
+- 不要强行写大用例：
+  - 若“展示条件”“点击交互”“按钮动效”“弹窗校验”“发起结果”已经是几个相互独立的验证目标，宁可拆开，也不要为了看起来完整硬并成一条大 case
+  - 一个模块能否收成大 case，先看是否真的是同一个页面区域驱动，而不是只看它们是否都属于同一功能
 - 默认先收后拆，不要先碎写再尝试合并。
 
 ## 质量检查清单
 - [ ] 若用户未明确要求其它格式，最终交付优先为 `.xmind`。
 - [ ] 未额外生成或同步 `.md` 测试用例文件。
 - [ ] XMind 节点结构符合“页面/模块 -> 功能 -> 用例 -> 步骤 -> 预期”的层次，不回退成表格思路。
+- [ ] 若最终要入 Coding，用例成品层级已再次确认符合“用例名称 -> 测试步骤 -> 预期结果”，没有插入额外中间节点。
 - [ ] 每个模块至少有一个 `###` 节点。
 - [ ] 模块顺序符合页面从上到下的阅读/操作顺序。
+- [ ] 没有把多个独立页面区域混挂在同一个模块标题里。
 - [ ] 若有原型图/原型页，已先完成“原型区域 -> 文字规则 -> 用例节点”对齐。
 - [ ] 用例先挂在页面元素下，再展开正常、异常、边界场景。
 - [ ] 每个重点模块都检查过是否更适合写成“一个完整 case + 多分支预期”。
+- [ ] 每个重点模块都检查过是否反而更适合拆成多个独立 case，而不是强行写大用例。
 - [ ] 预期结果里先有页面元素描写，再有交互变化和条件分支。
 - [ ] Tab切换、标签切换、线路/套餐切换、展开收起、关闭重开等交互没有遗漏。
 - [ ] 需求里涉及的条件维度已先拆解，再按业务意义做过排列组合。
@@ -284,6 +323,7 @@ node .codex/skills/maitao-testcase-style/scripts/batch_validate_testcases.js --d
 ## 示例
 参照 `references/style-example.md` 领会缩进与编号的呈现方式。需要更多上下文时，优先对照 `testcases/+麦淘旅行家测试用例（落地页）.xmind`，必要时再打开 `testcases/+麦淘旅行家测试用例（落地页）.md` 全文比对。
 - 原型图和文字需求对不齐时，优先打开 `references/prototype-alignment-template.md`；日历链路风格对齐时，优先再看 `references/calendar-style-example.md` 和 `references/calendar-xmind-skeleton-template.md`。
+- 若当前任务与 `线路PK` 一类需求相近，或用户连续反馈“模块挂错了”“不要强行写大用例”“最终 XMind 要给 Coding 入库”，优先再打开 `references/line-pk-retrospective.md`。
 - 如果当前任务属于“日历改造 / 团期 / 起售价 / 价格说明 / 全部日期 / 选择资源 / 咨询入口 / 埋点”链路，且需要同时理解原型图、文字规则、用户原稿之间的对应关系，优先再打开 `references/calendar-requirement-knowledge-base.md`。
 - 如果当前任务和历史需求可能同属一个功能链路，默认先检索知识库和 `testcases/` 里的旧用例，确认是否存在可继承的历史规则、历史分支、历史埋点命名。
 - 生成与转换优先使用：`scripts/generate_calendar_skeleton.js`、`scripts/generate_calendar_xmind.js`、`scripts/markdown_to_xmind.js`、`scripts/xmind_to_markdown.js`、`scripts/batch_convert_testcases.js`。

@@ -1,0 +1,7 @@
+interface:
+  display_name: "知识库管理"
+  short_description: "沉淀、检索、分类和复用本地知识库内容"
+  default_prompt: "Use $knowledge-base-manager to create, update, query, classify, and reuse local knowledge-base entries for rules, retrospectives, feature history, and reusable QA knowledge."
+
+policy:
+  allow_implicit_invocation: true

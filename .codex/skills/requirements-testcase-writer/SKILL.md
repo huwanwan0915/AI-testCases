@@ -7,6 +7,11 @@ description: "Use this skill for the general workflow of generating, supplementi
 
 This skill converts requirement documents in the repo into structured, executable test cases. It is optimized for the conventions already used in this workspace: source material lives in `requirments/` and generated output goes to `testcases/`.
 
+## Hard Checks Before Writing
+
+- First read `../maitao-testcase-style/references/testcase-hard-checklist.md` when the output will follow this repo's XMind testcase style.
+- Treat that checklist as the shared hard-rule baseline for module split, case granularity, numbering, Coding import hierarchy, and temporary-file placement.
+
 ## When To Use
 
 Use this skill when the user asks to:
@@ -55,6 +60,16 @@ When the source is Axure HTML:
 - combine related pages in the same folder to reconstruct the end-to-end flow
 - do not invent backend rules or hidden validation logic unless the requirement explicitly shows them
 - when the page contains rule prose like `如果`、`当`、`仅当`、`A有/B无`、`显示/不显示`、`置灰/可点`、`命中/兜底`, first extract the condition dimensions and enumerate the meaningful combinations before writing cases
+
+Before you start writing the real testcase set, default to this upstream sequence when context allows:
+
+1. first use `requirement-decomposer` to拆页面模块、流程、条件维度、状态分支
+2. then use `knowledge-base-manager` to检索历史规则、历史分支、历史口径、历史需求/旧用例
+3. explicitly distinguish:
+   - 哪些规则是历史沿用
+   - 哪些规则是本次新增
+   - 哪些点仍待确认
+4. only then write the formal testcase coverage
 
 ### 3. Design the testcase set
 
@@ -141,8 +156,12 @@ If a testcase file already exists:
 ## Skill Coordination
 
 - Use this skill as the primary workflow for requirement-to-testcase conversion in this repo.
+- Prefer this chaining when the user is dealing with a non-trivial feature:
+  - `requirement-decomposer` -> `knowledge-base-manager` -> `requirements-testcase-writer` -> `maitao-testcase-style`（如需）
 - If the task explicitly asks for the user's existing 麦淘/个人 testcase style, or the local evidence clearly points to that style, also apply `maitao-testcase-style`.
 - When both skills apply, split responsibility this way:
+  - `requirement-decomposer`: requirement breakdown, page-module decomposition, flow split, branch-matrix decomposition
+  - `knowledge-base-manager`: history lookup, reusable rule lookup, classify historical-vs-new conclusions
   - `requirements-testcase-writer`: source discovery, requirement normalization, coverage design, output path/file decisions, and generic testcase quality
   - `maitao-testcase-style`: wording rhythm, case granularity, page-module naming, XMind branch structure, and style-specific anti-pattern avoidance
 - If there is no clear style signal, stay with this skill's default repo-level XMind conventions and do not implicitly assume the full 麦淘 style.
@@ -158,6 +177,8 @@ Quality bar:
 - use the screenshot-based XMind structure as the default testcase style for this repo
 - when the user asks for testcase generation in this repo, generate/update a real `.xmind` file in `testcases/` and do not sync a markdown copy unless explicitly requested
 - when temporary markdown drafting is necessary for conversion, store it outside `testcases/` by default and keep only the final `.xmind` in `testcases/`
+- when the final `.xmind` is intended for Coding testcase import, verify the produced file still conforms to the minimal import hierarchy `用例名称 -> 测试步骤 -> 预期结果`
+- when the final `.xmind` is intended for Coding testcase import, `预期结果` must remain a leaf node; numbered subitems such as `1）2）3）`, letter branches such as `a. b. c.`, and branch details such as `b-1）` must be written into the same result node body instead of creating extra child topics under `预期结果`
 - use page structure as the primary organizing principle: `页面 -> 页面区域/元素 -> 场景/用例`; business rules are secondary and should be attached to the relevant page node
 - each case must be testable and have a clear scenario boundary
 - preconditions must be embedded into `测试步骤`; do not keep a separate `前置条件` column unless the user explicitly asks for that schema
@@ -166,6 +187,13 @@ Quality bar:
 - separate UI display checks from business-rule checks when they can fail independently
 - preserve numbered and lettered branches when the requirement is naturally a rule tree or state matrix
 - when the requirement contains a state matrix or condition matrix, explicitly enumerate the meaningful combinations instead of summarizing them as `按规则显示`
+- use this branch judgment across all testcase writing in this repo, not just for one feature:
+  - fixed element lists, fixed display lists, fixed interaction lists, fixed input lists, and other non-branch descriptive lists use `1） 2） 3）`
+  - real condition/result differences use `a. b. c.`
+  - if a letter branch contains fixed descriptive subitems, use `b-1）`, `b-2）`, `c-3-a）`
+  - never mix numbering into forms like `1.a.`, `1-2a.`, or `2.d-1.`
+- if one sentence currently compresses multiple independent condition objects with the same result pattern, expand them into letter branches instead of keeping them in one sequential item; typical examples include `团购/卡预约/隐藏/不可售`, `有数据/无数据`, `单线路/多线路`, `有评价/无评价`, `未完成/已完成`
+- if one sentence describes a mapping, categorization, or correspondence relation and different source objects map to different targets, also expand it into letter branches instead of one sequential sentence; typical examples include category mapping, dimension-to-field mapping, and status-to-label mapping
 - explicitly mark assumptions and unresolved questions instead of hiding them
 - do not stop at static display; explicitly cover user-driven interaction changes such as tab switch, category switch, line/package switch, filter toggle, scroll, close, reopen, expand, collapse, and login-state transition when they exist in the requirement or screenshot
 - if the user has already adjusted one testcase file into the target company style, treat that file as the highest-priority local style reference for subsequent rewrites

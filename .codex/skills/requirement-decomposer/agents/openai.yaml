@@ -1,0 +1,7 @@
+interface:
+  display_name: "需求拆解"
+  short_description: "先拆页面模块、流程、条件维度和状态分支，不直接产出最终用例"
+  default_prompt: "Use $requirement-decomposer to decompose a requirement into page modules, flows, rule dimensions, state branches, and open questions before writing final test cases."
+
+policy:
+  allow_implicit_invocation: true

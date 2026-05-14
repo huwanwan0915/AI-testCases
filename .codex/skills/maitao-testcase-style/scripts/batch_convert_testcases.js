@@ -14,6 +14,7 @@ if (args.includes("--help") || args.length === 0) {
 let mode = "";
 let dir = "";
 let overwrite = false;
+let codingImport = false;
 
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i];
@@ -25,6 +26,8 @@ for (let i = 0; i < args.length; i += 1) {
     i += 1;
   } else if (arg === "--overwrite") {
     overwrite = true;
+  } else if (arg === "--coding-import") {
+    codingImport = true;
   }
 }
 
@@ -35,10 +38,11 @@ if (!mode || !dir || !["md-to-xmind", "xmind-to-md"].includes(mode)) {
 
 function printHelp() {
   console.log(`Usage:
-  node scripts/batch_convert_testcases.js --mode <md-to-xmind|xmind-to-md> --dir "<directory>" [--overwrite]
+  node scripts/batch_convert_testcases.js --mode <md-to-xmind|xmind-to-md> --dir "<directory>" [--overwrite] [--coding-import]
 
 Examples:
   node scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases"
+  node scripts/batch_convert_testcases.js --mode md-to-xmind --dir "testcases" --coding-import
   node scripts/batch_convert_testcases.js --mode xmind-to-md --dir "/tmp/testcases-md" --overwrite
 `);
 }
@@ -103,7 +107,12 @@ for (const inputPath of files) {
     continue;
   }
 
-  const run = spawnSync("node", [runner, "--input", inputPath, "--output", outputPath], {
+  const runnerArgs = ["--input", inputPath, "--output", outputPath];
+  if (mode === "md-to-xmind" && codingImport) {
+    runnerArgs.push("--coding-import");
+  }
+
+  const run = spawnSync("node", [runner, ...runnerArgs], {
     encoding: "utf8",
   });
 
@@ -120,6 +129,7 @@ for (const inputPath of files) {
 
 console.log(`mode=${mode}`);
 console.log(`dir=${targetDir}`);
+console.log(`coding_import=${codingImport}`);
 console.log(`success=${result.success.length}`);
 console.log(`skipped=${result.skipped.length}`);
 console.log(`failed=${result.failed.length}`);

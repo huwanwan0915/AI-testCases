@@ -30,6 +30,9 @@ function printHelp() {
   console.log(`Usage:
   node scripts/batch_validate_testcases.js --dir "<directory>"
 
+This batch validator also surfaces Coding-import leaf-node problems
+reported by validate_testcase_structure.js.
+
 Example:
   node scripts/batch_validate_testcases.js --dir "testcases"
 `);
@@ -94,6 +97,7 @@ const summary = {
   ok: 0,
   withIssues: 0,
   failed: 0,
+  codingLeafIssues: 0,
   items: [],
 };
 
@@ -116,13 +120,19 @@ for (const filePath of files) {
   const issueCount = Number(parsed.meta.issue_count || parsed.issues.length || 0);
 
   if (issueCount > 0) {
+    const codingLeafIssueCount = parsed.issues.filter((issue) =>
+      issue.includes("不符合 Coding 入库叶子节点要求")
+    ).length;
+
     summary.withIssues += 1;
+    summary.codingLeafIssues += codingLeafIssueCount;
     summary.items.push({
       filePath,
       status: "issues",
       type: parsed.meta.type || "",
       title: parsed.meta.title || "",
       caseCount: parsed.meta.case_count || "",
+      codingLeafIssueCount,
       issues: parsed.issues,
     });
   } else {
@@ -143,12 +153,16 @@ console.log(`total=${summary.total}`);
 console.log(`ok=${summary.ok}`);
 console.log(`with_issues=${summary.withIssues}`);
 console.log(`failed=${summary.failed}`);
+console.log(`coding_leaf_issues=${summary.codingLeafIssues}`);
 
 if (summary.withIssues > 0) {
   console.log("\n[FILES_WITH_ISSUES]");
   for (const item of summary.items.filter((x) => x.status === "issues")) {
     console.log(`${item.filePath}`);
     console.log(`type=${item.type} title=${item.title} case_count=${item.caseCount}`);
+    if (item.codingLeafIssueCount > 0) {
+      console.log(`coding_leaf_issue_count=${item.codingLeafIssueCount}`);
+    }
     for (const issue of item.issues) {
       console.log(`- ${issue}`);
     }
