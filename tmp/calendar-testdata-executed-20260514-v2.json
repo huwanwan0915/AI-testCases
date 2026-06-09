@@ -1,0 +1,194 @@
+{
+  "marker": "codexcal20260514v2",
+  "params": {
+    "cal_b": {
+      "activity_id": "A0726011610174081166",
+      "activity_code": 119030,
+      "title": "【名额有限】复旦国学社2026开年大课暨年会盛典｜与名师王德峰老师等共启智慧之年"
+    },
+    "cal_c": {
+      "activity_id": "A0726011609143982476",
+      "activity_code": 119028,
+      "title": "全成团！广西山野奢玩崇左6日｜跨国瀑布，探秘雨林，追粉海豚，住在野宿集，5钻酒店",
+      "act_group_id": "A1426011610254182534"
+    },
+    "cal_d": {
+      "activity_id": "A0726010917570382146",
+      "activity_code": 118985,
+      "title": "【野趣滇西】腾冲5日亲子游｜火山地质研学+热海科考，荒野厨房，边陲红色教育",
+      "act_group_id": "A1426010919095682206",
+      "act_item_id": "A0226042016245918761"
+    },
+    "cal_e": {
+      "activity_id": "A0726012117123581915",
+      "activity_code": 119090,
+      "title": "公益研学0元报名！跟着上历博解锁上海之源，从崧泽到朱家角，触摸6000年文明根脉",
+      "act_item_id": "A0226040911072018149"
+    },
+    "cal_f": {
+      "activity_id": "A0724031812544381263",
+      "activity_code": 108144,
+      "title": "【夏令营】读懂中国成都6日夏令营| 熊猫保育、川剧变脸、都江堰、三星堆、川菜文化",
+      "act_item_id": "A0226011316374582762"
+    },
+    "cal_g": {
+      "activity_id": "A0726012117123581915",
+      "activity_code": 119090,
+      "title": "公益研学0元报名！跟着上历博解锁上海之源，从崧泽到朱家角，触摸6000年文明根脉",
+      "act_price_id": "A0426040911072018150"
+    },
+    "cal_r": {
+      "activity_id": "A0726012117123581915",
+      "activity_code": 119090,
+      "title": "公益研学0元报名！跟着上历博解锁上海之源，从崧泽到朱家角，触摸6000年文明根脉",
+      "act_item_id": "A0226040911072018149",
+      "user_id": "u20260514v2",
+      "mobile": "13900005224"
+    }
+  },
+  "meta": {
+    "cal_c_onsale_remind_id": 10427,
+    "cal_d_share_stock_id": 579,
+    "cal_d_flash_rule_id": 851,
+    "cal_d_bind_id": 159,
+    "cal_r_candidate_id": 39231
+  },
+  "snapshot": {
+    "cal_b_activity": {
+      "activity_id": "A0726011610174081166",
+      "is_waiting": 0,
+      "onsale_time": null,
+      "sell_status": 1,
+      "status": "1"
+    },
+    "cal_b_can_order": {
+      "id": "A0726011610174081166",
+      "can_order": 1
+    },
+    "cal_c_activity": {
+      "activity_id": "A0726011609143982476",
+      "is_waiting": 0,
+      "onsale_time": null,
+      "sell_status": 1,
+      "status": "1"
+    },
+    "cal_d_item": {
+      "act_item_id": "A0226042016245918761",
+      "expires_at": "2026-05-17 19:12:00",
+      "support_candidate": 0,
+      "regular_max": 15
+    },
+    "cal_e_item": {
+      "act_item_id": "A0226040911072018149",
+      "expires_at": "2026-05-16 17:36:00",
+      "support_candidate": 1,
+      "regular_max": 100
+    },
+    "cal_f_item": {
+      "act_item_id": "A0226011316374582762",
+      "expires_at": "2026-06-26 20:00:00",
+      "support_candidate": 0,
+      "regular_max": 20
+    },
+    "cal_g_activity": {
+      "activity_id": "A0726012117123581915",
+      "can_ccard_booking": 1
+    },
+    "cal_g_price": {
+      "act_price_id": "A0426040911072018150",
+      "can_ccard_booking": 0
+    },
+    "cal_r_item": {
+      "act_item_id": "A0226040911072018149",
+      "expires_at": "2026-05-16 17:36:00",
+      "support_candidate": 1,
+      "regular_max": 100
+    }
+  },
+  "results": [
+    {
+      "scene": "CAL-B 产品级即将开售",
+      "activity_code": 119030,
+      "activity_id": "A0726011610174081166",
+      "act_group_id": "",
+      "act_item_id": "",
+      "act_price_id": "",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "activity.is_waiting=1; onsale_time+2d; act_can_order.can_order=1",
+      "verify": "{\"activity\": {\"activity_id\": \"A0726011610174081166\", \"activity_code\": 119030, \"title\": \"【名额有限】复旦国学社2026开年大课暨年会盛典｜与名师王德峰老师等共启智慧之年\", \"is_waiting\": 1, \"onsale_time\": \"2026-05-16 18:53:44\", \"sell_status\": 1, \"status\": \"1\"}, \"can_order\": {\"id\": \"A0726011610174081166\", \"can_order\": 1, \"update_date\": \"2026-05-14 18:53:44\"}}"
+    },
+    {
+      "scene": "CAL-C 套餐级即将开售",
+      "activity_code": 119028,
+      "activity_id": "A0726011609143982476",
+      "act_group_id": "A1426011610254182534",
+      "act_item_id": "",
+      "act_price_id": "",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "activity.is_waiting=2; insert act_onsale_remind",
+      "verify": "{\"activity\": {\"activity_id\": \"A0726011609143982476\", \"activity_code\": 119028, \"title\": \"全成团！广西山野奢玩崇左6日｜跨国瀑布，探秘雨林，追粉海豚，住在野宿集，5钻酒店\", \"is_waiting\": 2, \"onsale_time\": \"2026-05-17 18:53:44\", \"sell_status\": 1, \"status\": \"1\"}, \"remind\": {\"onsale_remind_id\": 10427, \"activity_id\": \"A0726011609143982476\", \"act_group_id\": \"A1426011610254182534\", \"appid\": \"wx_cal_20260514_v2\", \"remind_time\": \"2026-05-16 18:53:44\", \"status\": 0}}"
+    },
+    {
+      "scene": "CAL-D 调价优惠",
+      "activity_code": 118985,
+      "activity_id": "A0726010917570382146",
+      "act_group_id": "A1426010919095682206",
+      "act_item_id": "A0226042016245918761",
+      "act_price_id": "",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "insert act_flash_discount_rule; insert act_item_flash_discount",
+      "verify": "{\"rule\": {\"id\": 851, \"activity_id\": \"A0726010917570382146\", \"name\": \"日历改造测试调价-20260514-v2\", \"price_delta\": \"120.00\", \"share_stock_id\": 579, \"status\": \"0\"}, \"bind\": {\"id\": 159, \"act_group_id\": \"A1426010919095682206\", \"act_item_id\": \"A0226042016245918761\", \"act_flash_discount_rule_id\": 851, \"status\": \"0\"}}"
+    },
+    {
+      "scene": "CAL-E 倒计时横幅",
+      "activity_code": 119090,
+      "activity_id": "A0726012117123581915",
+      "act_group_id": "",
+      "act_item_id": "A0226040911072018149",
+      "act_price_id": "",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "act_item.expires_at=7天内",
+      "verify": "{\"act_item_id\": \"A0226040911072018149\", \"expires_at\": \"2026-05-21 18:53:44\", \"support_candidate\": 1, \"regular_max\": 0, \"status\": \"1\"}"
+    },
+    {
+      "scene": "CAL-F 无横幅普通产品",
+      "activity_code": 108144,
+      "activity_id": "A0724031812544381263",
+      "act_group_id": "",
+      "act_item_id": "A0226011316374582762",
+      "act_price_id": "",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "act_item.expires_at>15天",
+      "verify": "{\"act_item_id\": \"A0226011316374582762\", \"expires_at\": \"2026-06-03 18:53:44\", \"support_candidate\": 0, \"regular_max\": 20, \"status\": \"1\"}"
+    },
+    {
+      "scene": "CAL-G 卡预约",
+      "activity_code": 119090,
+      "activity_id": "A0726012117123581915",
+      "act_group_id": "",
+      "act_item_id": "A0226040911072018149",
+      "act_price_id": "A0426040911072018150",
+      "user_id": "",
+      "mobile": "",
+      "core_change": "activity.can_ccard_booking=1; act_price.can_ccard_booking=2",
+      "verify": "{\"activity\": {\"activity_id\": \"A0726012117123581915\", \"activity_code\": 119090, \"title\": \"公益研学0元报名！跟着上历博解锁上海之源，从崧泽到朱家角，触摸6000年文明根脉\", \"can_ccard_booking\": 1}, \"price\": {\"act_price_id\": \"A0426040911072018150\", \"act_item_id\": \"A0226040911072018149\", \"price\": \"10.00\", \"can_ccard_booking\": 2}}"
+    },
+    {
+      "scene": "CAL-R 候补",
+      "activity_code": 119090,
+      "activity_id": "A0726012117123581915",
+      "act_group_id": "",
+      "act_item_id": "A0226040911072018149",
+      "act_price_id": "",
+      "user_id": "u20260514v2",
+      "mobile": "13900005224",
+      "core_change": "act_item.support_candidate=1; insert act_item_candidate",
+      "verify": "{\"item\": {\"act_item_id\": \"A0226040911072018149\", \"expires_at\": \"2026-05-21 18:53:44\", \"support_candidate\": 1, \"regular_max\": 0, \"status\": \"1\"}, \"candidate\": {\"id\": 39231, \"activity_id\": \"A0726012117123581915\", \"act_item_id\": \"A0226040911072018149\", \"user_id\": \"u20260514v2\", \"mobile\": \"13900005224\", \"adult_cnt\": 2, \"child_cnt\": 1, \"remark\": \"日历改造测试数据-候补-20260514-v2\", \"status\": \"0\"}}"
+    }
+  ]
+}

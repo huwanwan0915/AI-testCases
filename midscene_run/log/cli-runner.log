@@ -1,0 +1,25 @@
+[2026-06-05T16:28:31.122+08:00] CLI invoked: midscene-web connect --url https://www.figma.com/make/DwKBXpFxg0W9vZvWgz65IP/%E9%95%BF%E7%BA%BF%E9%A6%96%E5%B1%8F-%E8%AF%84%E8%AE%BA%E6%9D%BF%E5%9D%97%E4%BC%98%E5%8C%96?p=f
+[2026-06-05T16:28:31.250+08:00] command: connect, args: {"url":"https://www.figma.com/make/DwKBXpFxg0W9vZvWgz65IP/%E9%95%BF%E7%BA%BF%E9%A6%96%E5%B1%8F-%E8%AF%84%E8%AE%BA%E6%9D%BF%E5%9D%97%E4%BC%98%E5%8C%96?p=f"}
+[2026-06-05T16:28:44.207+08:00] command connect completed, isError: false
+[2026-06-05T16:29:39.843+08:00] CLI invoked: midscene-web take_screenshot
+[2026-06-05T16:29:39.874+08:00] command: take_screenshot, args: {}
+[2026-06-05T16:29:40.359+08:00] command take_screenshot completed, isError: false
+[2026-06-05T16:30:07.073+08:00] CLI invoked: midscene-web act --prompt 在中间的手机原型预览里向上滑动/滚动，查看详情页首屏下方的内容，保持在详情页面原型内，不要操作左侧编辑面板
+[2026-06-05T16:30:07.104+08:00] command: act, args: {"prompt":"在中间的手机原型预览里向上滑动/滚动，查看详情页首屏下方的内容，保持在详情页面原型内，不要操作左侧编辑面板"}
+[2026-06-05T16:30:07.271+08:00] command act completed, isError: true
+[2026-06-05T16:31:18.554+08:00] CLI invoked: midscene-web --help
+[2026-06-05T16:31:18.578+08:00] showing help (no command or --help flag)
+[2026-06-05T16:31:37.979+08:00] CLI invoked: midscene-web scroll --direction down --distance 450 --locate {"prompt":"中间的手机详情页原型预览区域"}
+[2026-06-05T16:31:38.006+08:00] command: scroll, args: {"direction":"down","distance":450,"locate":{"prompt":"中间的手机详情页原型预览区域"}}
+[2026-06-05T16:31:38.190+08:00] command scroll completed, isError: false
+[2026-06-05T16:31:54.858+08:00] CLI invoked: midscene-web scroll --direction down --distance 450
+[2026-06-05T16:31:54.884+08:00] command: scroll, args: {"direction":"down","distance":450}
+[2026-06-05T16:31:55.077+08:00] command scroll completed, isError: false
+[2026-06-05T16:32:17.467+08:00] CLI invoked: midscene-web tap --help
+[2026-06-05T16:32:17.494+08:00] showing command help for: tap
+[2026-06-05T16:37:33.450+08:00] CLI invoked: midscene-web tap --locate {"x":995,"y":105}
+[2026-06-05T16:37:33.475+08:00] command: tap, args: {"locate":{"x":995,"y":105}}
+[2026-06-05T16:37:33.902+08:00] command tap completed, isError: false
+[2026-06-05T16:38:09.974+08:00] CLI invoked: midscene-web keyboardpress --keyName Tab
+[2026-06-05T16:38:10.001+08:00] command: keyboardpress, args: {"keyName":"Tab"}
+[2026-06-05T16:38:10.253+08:00] command keyboardpress completed, isError: false

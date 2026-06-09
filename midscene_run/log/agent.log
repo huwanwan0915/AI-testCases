@@ -1,0 +1,24 @@
+[2026-06-05T16:31:38.124+08:00] callActionInActionSpace Scroll , {
+  direction: 'down',
+  distance: 450,
+  locate: { prompt: '中间的手机详情页原型预览区域' }
+}
+[2026-06-05T16:31:38.125+08:00] actionPlan {
+  type: 'Scroll',
+  param: {
+    direction: 'down',
+    distance: 450,
+    locate: { prompt: '中间的手机详情页原型预览区域' }
+  },
+  thought: ''
+}
+[2026-06-05T16:31:55.019+08:00] callActionInActionSpace Scroll , { direction: 'down', distance: 450 }
+[2026-06-05T16:31:55.020+08:00] actionPlan {
+  type: 'Scroll',
+  param: { direction: 'down', distance: 450 },
+  thought: ''
+}
+[2026-06-05T16:37:33.631+08:00] callActionInActionSpace Tap , { locate: { x: 995, y: 105 } }
+[2026-06-05T16:37:33.632+08:00] actionPlan { type: 'Tap', param: { locate: { x: 995, y: 105 } }, thought: '' }
+[2026-06-05T16:38:10.141+08:00] callActionInActionSpace KeyboardPress , { keyName: 'Tab' }
+[2026-06-05T16:38:10.142+08:00] actionPlan { type: 'KeyboardPress', param: { keyName: 'Tab' }, thought: '' }

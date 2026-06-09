@@ -1,0 +1,8 @@
+场景,是否已执行,产品编号activity_code,活动IDactivity_id,套餐IDact_group_id,场次IDact_item_id,价格IDact_price_id,用户IDuser_id,手机号mobile,核心改动,结果校验
+CAL-B 产品级即将开售,否,,,,,,,,"activity.is_waiting=1; onsale_time>now; act_can_order.can_order=1",
+CAL-C 套餐级即将开售,否,,,,,,,,"activity.is_waiting=2; insert act_onsale_remind",
+CAL-D 调价优惠,否,,,,,,,,"insert act_flash_discount_rule; insert act_item_flash_discount",
+CAL-E 倒计时横幅,否,,,,,,,,"act_item.expires_at within 7 days",
+CAL-F 无横幅普通产品,否,,,,,,,,"act_item.expires_at over 15 days",
+CAL-G 卡预约,否,,,,,,,,"activity.can_ccard_booking=1; act_price.can_ccard_booking>0",
+CAL-R 候补,否,,,,,,,,"act_item.support_candidate=1; insert act_item_candidate",
